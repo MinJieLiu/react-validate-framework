@@ -43,7 +43,7 @@
   "dependencies": {
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "validate-framework": "^2.1.1"
+    "validate-framework": "^3.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

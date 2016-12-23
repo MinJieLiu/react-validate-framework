@@ -2,6 +2,11 @@
  * Created by MingYi on 2016/9/25.
  */
 
-import Validator from './Validator';
+import FormControl from './FormControl';
+import Input from './Input';
 
-export default Validator;
+export {
+  Input,
+};
+
+export default FormControl;
