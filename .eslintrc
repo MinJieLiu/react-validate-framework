@@ -1,8 +1,15 @@
 {
-  "parser" : "babel-eslint",
+  "parser": "babel-eslint",
   "extends": "airbnb",
-  "rules"  : {
-    // 换行符风格 unix/windows
-    "linebreak-style": 0
+  "globals": {
+    "__DEV__": true,
+    "document": true,
+    "window": true
+  },
+  "rules": {
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "react/forbid-prop-types": "off",
+    "react/jsx-filename-extension": "off"
   }
 }
