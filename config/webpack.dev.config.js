@@ -5,13 +5,13 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 export default {
   devtool: 'source-map',
   entry: [
+    'webpack/hot/dev-server',
     'webpack-hot-middleware/client',
-    './example/index',
+    path.resolve('./example/index'),
   ],
   output: {
     path: path.join(__dirname, '/static'),
     filename: 'bundle.js',
-    publicPath: '/static/',
   },
   module: {
     loaders: [
@@ -36,11 +36,10 @@ export default {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './example/index.html',
-      inject: true,
-    }),
     new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve('./example/index.html'),
+    }),
   ],
   resolve: {
     extensions: ['', '.js', '.jsx', '.json'],

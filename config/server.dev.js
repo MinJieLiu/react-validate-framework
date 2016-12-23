@@ -13,10 +13,15 @@ const compiler = webpack(config);
 
 app.use(webpackDevMiddleware(compiler, {
   publicPath: config.output.publicPath,
+  reload: true,
   stats: config.stats,
 }));
 
-app.use(webpackHotMiddleware(compiler));
+app.use(webpackHotMiddleware(compiler, {
+  log: debug,
+}));
+
+app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../example/index.html'));
