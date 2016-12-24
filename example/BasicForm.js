@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import FormControl from '../src';
 import './BasicForm.scss';
 
-const fields = {
+const schemas = {
   email: {
     rules: 'required | isEmail | maxLength(32)',
     messages: '不能为空 | 请输入合法邮箱 | 不能超过 {{param}} 个字符',
@@ -41,22 +41,28 @@ const fields = {
 class BasicForm extends Component {
 
   static propTypes = {
+    fields: PropTypes.object,
     onChange: PropTypes.func,
-    values: PropTypes.object,
-    errors: PropTypes.object,
+    validate: PropTypes.func,
+  };
+
+  state = {
+    isValidate: false,
+  };
+
+  handleSubmitClick = () => {
+    const { validate } = this.props;
+    const isValidate = validate();
+    this.setState({
+      isValidate,
+    });
   };
 
   render() {
     const {
       onChange,
-      values,
-      errors,
+      fields,
     } = this.props;
-
-    const formControlCls = classNames('form-control', {
-      'valid-error': false,
-      'valid-success': false,
-    });
 
     return (
       <div className="container">
@@ -64,15 +70,18 @@ class BasicForm extends Component {
         <div className="form-group">
           <label htmlFor="email">邮箱：</label>
           <input
-            className={formControlCls}
+            className={classNames('form-control', {
+              'valid-error': fields.email.result === false,
+              'valid-success': fields.email.result,
+            })}
             id="email"
             name="email"
             type="email"
             onChange={onChange}
-            value={values.email}
+            value={fields.email.value}
             placeholder="请输入邮箱"
           />
-          <em className="valid-error-message">{errors.email}</em>
+          <em className="valid-error-message">{fields.email.message}</em>
         </div>
         <div className="form-group">
           <label htmlFor="phone">手机：</label>
@@ -82,10 +91,10 @@ class BasicForm extends Component {
             name="phone"
             type="text"
             onChange={onChange}
-            value={values.phone}
+            value={fields.phone.value}
             placeholder="请输入手机号"
           />
-          <em className="valid-error-message">{errors.phone}</em>
+          <em className="valid-error-message">{fields.phone.message}</em>
         </div>
         <div className="form-group">
           <label htmlFor="birthday">生日：</label>
@@ -95,10 +104,10 @@ class BasicForm extends Component {
             name="birthday"
             type="text"
             onChange={onChange}
-            value={values.birthday}
+            value={fields.birthday.value}
             placeholder="请填写生日"
           />
-          <em className="valid-error-message">{errors.birthday}</em>
+          <em className="valid-error-message">{fields.birthday.message}</em>
         </div>
         <div className="form-group">
           <label htmlFor="male">性别：</label>
@@ -124,7 +133,7 @@ class BasicForm extends Component {
               女
             </label>
           </div>
-          <em className="valid-error-message">{errors.sex}</em>
+          <em className="valid-error-message">{fields.sex.message}</em>
         </div>
         <div className="form-group">
           <label htmlFor="city">城市：</label>
@@ -133,7 +142,7 @@ class BasicForm extends Component {
             id="city"
             name="city"
             onChange={onChange}
-            value={values.city}
+            value={fields.city.value}
           >
             <option value="">请选择</option>
             <option value="0">北京</option>
@@ -141,7 +150,7 @@ class BasicForm extends Component {
             <option value="2">重庆</option>
             <option value="3">成都</option>
           </select>
-          <em className="valid-error-message">{errors.city}</em>
+          <em className="valid-error-message">{fields.city.message}</em>
         </div>
         <div className="form-group">
           <label htmlFor="hobby">爱好：</label>
@@ -177,7 +186,7 @@ class BasicForm extends Component {
               跑步
             </label>
           </div>
-          <em className="valid-error-message">{errors.hobby}</em>
+          <em className="valid-error-message">{fields.hobby.message}</em>
         </div>
 
         <div className="form-group">
@@ -188,20 +197,24 @@ class BasicForm extends Component {
             name="remarks"
             rows="3"
             onChange={onChange}
-            value={values.remarks}
+            value={fields.remarks.value}
             placeholder="一句话描述自己"
           />
-          <em className="valid-error-message">{errors.remarks}</em>
+          <em className="valid-error-message">{fields.remarks.message}</em>
         </div>
         <input
-          className="btn btn-primary"
+          className={classNames('btn', {
+            'btn-primary': !this.state.isValidate,
+            'btn-success': this.state.isValidate,
+          })}
           id="submit"
-          type="submit"
-          value="提交"
+          type="button"
+          onClick={this.handleSubmitClick}
+          value={this.state.isValidate ? '验证通过' : '提交'}
         />
       </div>
     );
   }
 }
 
-export default FormControl(fields)(BasicForm);
+export default FormControl(schemas)(BasicForm);
