@@ -13,24 +13,39 @@ export default schemas => FormComponent => (
   class FormControl extends Component {
 
     static propTypes = {
-      initValues: PropTypes.object.isRequired,
+      values: PropTypes.object.isRequired,
+      onChange: PropTypes.func,
     };
 
     constructor(props) {
       super(props);
-      const initValues = props.initValues;
+      const values = props.values;
 
       // 将初始化数据组装成 fields
       const fields = {};
-      Object.keys(initValues).forEach((name) => {
+      Object.keys(values).forEach((name) => {
         fields[name] = {
-          value: initValues[name],
+          value: values[name],
         };
       });
 
       this.state = {
         fields,
       };
+    }
+
+    componentWillReceiveProps(nextProps) {
+      const { values } = nextProps;
+      const { fields } = this.state;
+      Object.keys(values).forEach((name) => {
+        fields[name] = {
+          ...fields[name],
+          value: values[name],
+        };
+      });
+      this.setState({
+        fields,
+      });
     }
 
     /**
@@ -73,11 +88,14 @@ export default schemas => FormComponent => (
 
     handleChange = (e) => {
       const { name, type, value } = e.target;
+      const { onChange } = this.props;
       const { fields } = this.state;
+
       // 无 name 值
       if (!name) {
         return;
       }
+
       let theValue;
       // checkbox 处理
       if (type === 'checkbox') {
@@ -91,8 +109,10 @@ export default schemas => FormComponent => (
       } else {
         theValue = value;
       }
+
       // 验证并获得结果
       const { result, error } = this.validateField({ name, value });
+
       // 设置值
       this.setState({
         fields: {
@@ -100,10 +120,15 @@ export default schemas => FormComponent => (
           [name]: {
             value: theValue,
             result,
-            message: error.message,
+            message: error ? error.message : null,
           },
         },
       });
+
+      // callback
+      if (onChange) {
+        onChange(e);
+      }
     };
 
     // 验证当前组件

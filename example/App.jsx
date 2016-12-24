@@ -34,7 +34,7 @@ const App = () => (
       </div>
     </div>
     <BasicForm
-      initValues={{
+      values={{
         email: '',
         phone: '',
         birthday: '',
