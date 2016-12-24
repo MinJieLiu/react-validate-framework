@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/index.js"],"names":[],"mappings":";;;;;;AAIA;;;;;;yCAJA","file":"index.js","sourcesContent":["/**\n * Created by MingYi on 2016/9/25.\n */\n\nimport FormControl from './FormControl';\n\nexport default FormControl;\n"]}

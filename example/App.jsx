@@ -40,7 +40,7 @@ const App = () => (
         birthday: '',
         sex: '',
         city: '',
-        hobby: [],
+        hobby: ['2'],
         remarks: '',
       }}
     />

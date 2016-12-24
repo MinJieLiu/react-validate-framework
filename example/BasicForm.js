@@ -60,8 +60,8 @@ class BasicForm extends Component {
 
   render() {
     const {
-      onChange,
       fields,
+      onChange,
     } = this.props;
 
     return (
@@ -118,6 +118,7 @@ class BasicForm extends Component {
                 type="radio"
                 name="sex"
                 onChange={onChange}
+                checked={fields.sex.value === '0'}
                 value="0"
               />
               男
@@ -128,6 +129,7 @@ class BasicForm extends Component {
                 type="radio"
                 name="sex"
                 onChange={onChange}
+                checked={fields.sex.value === '1'}
                 value="1"
               />
               女
@@ -161,6 +163,7 @@ class BasicForm extends Component {
                 name="hobby"
                 type="checkbox"
                 onChange={onChange}
+                checked={fields.hobby.value.includes('1')}
                 value="1"
               />
               羽毛球
@@ -171,6 +174,7 @@ class BasicForm extends Component {
                 name="hobby"
                 type="checkbox"
                 onChange={onChange}
+                checked={fields.hobby.value.includes('2')}
                 value="2"
               />
               游泳
@@ -181,6 +185,7 @@ class BasicForm extends Component {
                 name="hobby"
                 type="checkbox"
                 onChange={onChange}
+                checked={fields.hobby.value.includes('3')}
                 value="3"
               />
               跑步

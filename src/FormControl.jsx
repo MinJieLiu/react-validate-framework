@@ -49,6 +49,19 @@ export default schemas => FormComponent => (
     }
 
     /**
+     * 获取表单值列表
+     * @return {{}}
+     */
+    get formValues() {
+      const { fields } = this.state;
+      const values = {};
+      Object.keys(fields).forEach((name) => {
+        values[name] = fields[name].value;
+      });
+      return values;
+    }
+
+    /**
      * 验证单个域
      * @param name
      * @param value
@@ -148,6 +161,7 @@ export default schemas => FormComponent => (
           fields={fields}
           onChange={this.handleChange}
           validate={this.handleValidate}
+          formValues={this.formValues}
         />
       );
     }
