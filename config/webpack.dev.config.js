@@ -21,7 +21,7 @@ export default {
         exclude: /node_modules/,
       },
       {
-        test: /\.scss$/,
+        test: /\.(css|scss)$/,
         loaders: [
           'style',
           'css',

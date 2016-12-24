@@ -4,15 +4,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './bootstrap.css';
 import App from './App';
 
 ReactDOM.render(
-  <App
-    initValues={{
-      email: '',
-      phone: '',
-    }}
-  />,
+  <App />,
   document.getElementById('root'),
 );
 

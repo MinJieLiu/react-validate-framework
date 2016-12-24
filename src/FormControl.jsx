@@ -19,18 +19,46 @@ export default fields => FormComponent => (
       };
     }
 
-    handleChange = (e) => {
-      const { name, value } = e.target;
-      const { values, errors } = this.state;
+    /**
+     * 验证单个 field
+     * @param name
+     * @param value
+     * @return {*}
+     */
+    validateField = ({ name, value }) => {
       // 验证
       const field = fields[name] || {};
       field.value = value;
-      const { result, error } = validator.validateByField(field);
+      return validator.validateByField(field);
+    };
+
+    handleChange = (e) => {
+      const { name, type, value } = e.target;
+      const { values, errors } = this.state;
+      // 无 name 值
+      if (!name) {
+        return;
+      }
+      let theValue;
+      // checkbox 处理
+      if (type === 'checkbox') {
+        theValue = this.state.values[name].slice();
+        const index = theValue.indexOf(value);
+        if (index === -1) {
+          theValue.push(value);
+        } else {
+          theValue.splice(index, 1);
+        }
+      } else {
+        theValue = value;
+      }
+      // 验证并获得结果
+      const { result, error } = this.validateField({ name, value });
       // 设置值
       this.setState({
         values: {
           ...values,
-          [name]: value,
+          [name]: theValue,
         },
         // 验证结果正确则清空错误信息
         errors: {
