@@ -59,6 +59,7 @@ export default schemas => FormComponent => (
     }
 
     componentWillReceiveProps(nextProps) {
+      // 受控组件从父组件中更新 state
       const { values } = nextProps;
       const { fields } = this.state;
       Object.keys(values).forEach((name) => {
@@ -74,7 +75,7 @@ export default schemas => FormComponent => (
 
     /**
      * 获取表单值列表
-     * @return {{}}
+     * @return {Object}
      */
     get formValues() {
       const { fields } = this.state;
@@ -140,12 +141,13 @@ export default schemas => FormComponent => (
       });
     }
 
+    // 表单改变事件监听
     handleChange = (e) => {
       const { name, type, value } = e.target;
       const { onChange } = this.props;
       const { fields } = this.state;
 
-      // 无 name 值
+      // 依赖 name 属性
       if (!name) {
         return;
       }
@@ -189,7 +191,7 @@ export default schemas => FormComponent => (
       // 验证
       this.validateFields();
       const { fields } = this.state;
-      // 排除 验证成功 和 未验证
+      // 排除 验证成功 和 未验证 状态
       return Object.keys(fields).every(name => fields[name].result !== false);
     };
 

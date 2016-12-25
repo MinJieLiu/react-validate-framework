@@ -42,6 +42,7 @@ class BasicForm extends Component {
 
   static propTypes = {
     fields: PropTypes.object,
+    formValues: PropTypes.object,
     onChange: PropTypes.func,
     validate: PropTypes.func,
     validateByName: PropTypes.func,
@@ -84,6 +85,7 @@ class BasicForm extends Component {
     const {
       fields,
       onChange,
+      formValues,
     } = this.props;
 
     return (
@@ -249,6 +251,10 @@ class BasicForm extends Component {
           onClick={this.handleSubmitClick}
           value={this.state.isValidate ? '验证通过' : '提交'}
         />
+        <div className="well-sm">
+          <p>表单值：</p>
+          {JSON.stringify(formValues)}
+        </div>
       </div>
     );
   }
