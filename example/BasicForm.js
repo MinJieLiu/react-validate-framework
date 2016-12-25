@@ -29,8 +29,8 @@ const schemas = {
     messages: '不能为空',
   },
   hobby: {
-    rules: 'required',
-    messages: '不能为空',
+    rules: 'required | selectLimit(2)',
+    messages: '不能为空 | 至少选择 {{param}} 项',
   },
   remarks: {
     rules: 'minLength(10) | maxLength(60)',
@@ -44,6 +44,16 @@ class BasicForm extends Component {
     fields: PropTypes.object,
     onChange: PropTypes.func,
     validate: PropTypes.func,
+  };
+
+  // 自定义扩展验证方法
+  static validator = {
+    selectLimit(field, param) {
+      if (Array.isArray(field.value)) {
+        return field.value.length >= param;
+      }
+      return false;
+    },
   };
 
   state = {
@@ -193,7 +203,6 @@ class BasicForm extends Component {
           </div>
           <em className="valid-error-message">{fields.hobby.message}</em>
         </div>
-
         <div className="form-group">
           <label htmlFor="remarks">简介：</label>
           <textarea

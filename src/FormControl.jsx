@@ -3,8 +3,26 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import validator from 'validate-framework/lib/validate';
+import validateFramework from 'validate-framework/lib/validate';
 
+/**
+ * 扩展必填验证方法，支持数组判断
+ * @param field
+ * @return {boolean}
+ */
+validateFramework.required = (field) => {
+  if (typeof field === 'string') {
+    return field !== '';
+  } else if (Array.isArray(field.value)) {
+    return field.value.length;
+  }
+  return field.value !== null && field.value !== '';
+};
+
+/**
+ * 包装组件方法
+ * @param schemas
+ */
 export default schemas => FormComponent => (
 
   /**
@@ -31,6 +49,12 @@ export default schemas => FormComponent => (
 
       this.state = {
         fields,
+      };
+
+      // 自定义验证方法
+      Object.assign(validateFramework, FormComponent.validator);
+      this.validator = {
+        ...validateFramework,
       };
     }
 
@@ -67,27 +91,27 @@ export default schemas => FormComponent => (
      * @param value
      * @return {*}
      */
-    validateField = ({ name, value }) => {
+    validateField(name, value) {
       // 验证
       const schema = {
         ...schemas[name],
         value,
       };
-      return validator.validateByField(schema);
-    };
+      return this.validator.validateByField(schema);
+    }
 
     /**
      * 验证所有
      * @return {Object} fields
      */
-    validateFields = () => {
+    validateFields() {
       const { fields } = this.state;
       Object.keys(schemas).forEach((name) => {
         const schema = {
           ...schemas[name],
           value: fields[name].value,
         };
-        const { result, error } = validator.validateByField(schema);
+        const { result, error } = this.validator.validateByField(schema);
         Object.assign(fields[name], {
           result,
           message: error ? error.message : null,
@@ -97,7 +121,7 @@ export default schemas => FormComponent => (
       this.setState({
         fields,
       });
-    };
+    }
 
     handleChange = (e) => {
       const { name, type, value } = e.target;
@@ -124,7 +148,7 @@ export default schemas => FormComponent => (
       }
 
       // 验证并获得结果
-      const { result, error } = this.validateField({ name, value });
+      const { result, error } = this.validateField(name, theValue);
 
       // 设置值
       this.setState({
