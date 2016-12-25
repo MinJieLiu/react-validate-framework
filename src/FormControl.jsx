@@ -86,18 +86,42 @@ export default schemas => FormComponent => (
     }
 
     /**
+     * 组装数据
+     * 此方法改变了状态，下个组件中集中更新 state
+     * @param name
+     * @param value
+     */
+    assembleFieldValidate(name, value) {
+      const { fields } = this.state;
+      // 验证
+      // 无 schema 则不验证
+      const schema = schemas[name] && Object.assign(schemas[name], { value });
+      const { result, error } = schema ? this.validator.validateByField(schema) : {};
+
+      // 组装
+      Object.assign(fields[name], {
+        value,
+        result,
+        message: error ? error.message : null,
+      });
+    }
+
+    /**
      * 验证单个域
      * @param name
      * @param value
-     * @return {*}
+     * @return {Boolean}
      */
     validateField(name, value) {
-      // 验证
-      const schema = {
-        ...schemas[name],
-        value,
-      };
-      return this.validator.validateByField(schema);
+      const { fields } = this.state;
+      // 组装数据
+      this.assembleFieldValidate(name, value);
+      // 集中更新
+      this.setState({
+        fields,
+      });
+
+      return fields[name].result;
     }
 
     /**
@@ -107,17 +131,10 @@ export default schemas => FormComponent => (
     validateFields() {
       const { fields } = this.state;
       Object.keys(schemas).forEach((name) => {
-        const schema = {
-          ...schemas[name],
-          value: fields[name].value,
-        };
-        const { result, error } = this.validator.validateByField(schema);
-        Object.assign(fields[name], {
-          result,
-          message: error ? error.message : null,
-        });
+        // 组装数据
+        this.assembleFieldValidate(name, fields[name].value);
       });
-
+      // 集中更新
       this.setState({
         fields,
       });
@@ -147,20 +164,8 @@ export default schemas => FormComponent => (
         theValue = value;
       }
 
-      // 验证并获得结果
-      const { result, error } = this.validateField(name, theValue);
-
-      // 设置值
-      this.setState({
-        fields: {
-          ...fields,
-          [name]: {
-            value: theValue,
-            result,
-            message: error ? error.message : null,
-          },
-        },
-      });
+      // 验证并更新
+      this.validateField(name, theValue);
 
       // callback
       if (onChange) {
@@ -168,12 +173,24 @@ export default schemas => FormComponent => (
       }
     };
 
+    /**
+     * 通过 name 手动验证单个组件
+     * @param name
+     * @return {Boolean}
+     */
+    handleValidateByName = (name) => {
+      const { fields } = this.state;
+      const value = fields[name].value;
+      return this.validateField(name, value);
+    };
+
     // 验证当前组件
     handleValidate = () => {
       // 验证
       this.validateFields();
       const { fields } = this.state;
-      return Object.keys(fields).every(name => fields[name].result === true);
+      // 排除 验证成功 和 未验证
+      return Object.keys(fields).every(name => fields[name].result !== false);
     };
 
     render() {
@@ -183,9 +200,10 @@ export default schemas => FormComponent => (
         <FormComponent
           {...this.props}
           fields={fields}
+          formValues={this.formValues}
           onChange={this.handleChange}
           validate={this.handleValidate}
-          formValues={this.formValues}
+          validateByName={this.handleValidateByName}
         />
       );
     }

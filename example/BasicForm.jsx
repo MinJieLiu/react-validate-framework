@@ -44,6 +44,7 @@ class BasicForm extends Component {
     fields: PropTypes.object,
     onChange: PropTypes.func,
     validate: PropTypes.func,
+    validateByName: PropTypes.func,
   };
 
   // 自定义扩展验证方法
@@ -58,6 +59,17 @@ class BasicForm extends Component {
 
   state = {
     isValidate: false,
+  };
+
+  /**
+   * 删除验证规则
+   * @param name
+   */
+  handleRemoveSchema = (name) => {
+    const { validateByName } = this.props;
+    delete schemas[name];
+    // 手动验证
+    validateByName(name);
   };
 
   handleSubmitClick = () => {
@@ -92,6 +104,17 @@ class BasicForm extends Component {
             placeholder="请输入邮箱"
           />
           <em className="valid-error-message">{fields.email.message}</em>
+        </div>
+        <div className="form-group">
+          <button
+            className="btn btn-default"
+            type="button"
+            onClick={() => {
+              this.handleRemoveSchema('email');
+            }}
+          >
+            不验证邮箱
+          </button>
         </div>
         <div className="form-group">
           <label htmlFor="phone">手机：</label>
