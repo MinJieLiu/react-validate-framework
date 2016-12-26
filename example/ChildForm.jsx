@@ -26,6 +26,8 @@ class ChildForm extends Component {
     onChange: PropTypes.func,
     validate: PropTypes.func,
     validateByName: PropTypes.func,
+    addFields: PropTypes.func,
+    removeFields: PropTypes.func,
   };
 
   state = {
@@ -38,6 +40,29 @@ class ChildForm extends Component {
     this.setState({
       isValidate,
     });
+  };
+
+  // 添加域
+  handleAddFriends = () => {
+    const { addFields } = this.props;
+    Object.assign(schemas, {
+      friend: {
+        rules: 'required',
+        messages: '不能为空',
+      }
+    });
+    addFields({
+      friend: {
+        value: '',
+      },
+    });
+  };
+
+  // 删除域
+  handleDeleteFriend = () => {
+    const { removeFields } = this.props;
+    removeFields(['friend']);
+    delete schemas['friend'];
   };
 
   render() {
@@ -58,13 +83,42 @@ class ChildForm extends Component {
             })}
             id="money"
             name="money"
-            type="money"
+            type="text"
             onChange={onChange}
             value={fields.money.value}
             placeholder="请输入金额"
           />
           <em className="valid-error-message">{fields.money.message}</em>
         </div>
+        <div className="form-group">
+          <button
+            className="btn btn-default"
+            onClick={fields.friend ? this.handleDeleteFriend : this.handleAddFriends}
+          >
+            {fields.friend ? '删除朋友' : '添加朋友'}
+          </button>
+        </div>
+        {
+          fields.friend
+            ? (
+              <div className="form-group">
+                <label htmlFor="friend">名字：</label>
+                <input
+                  className={classNames('form-control', {
+                    'valid-error': fields.friend.result === false,
+                    'valid-success': fields.friend.result,
+                  })}
+                  id="friend"
+                  name="friend"
+                  type="text"
+                  onChange={onChange}
+                  value={fields.friend.value}
+                  placeholder="请输入名字"
+                />
+                <em className="valid-error-message">{fields.friend.message}</em>
+              </div>
+            ) : null
+        }
         <div className="form-group">
           <label htmlFor="url">网址：</label>
           <input
@@ -74,7 +128,7 @@ class ChildForm extends Component {
             })}
             id="url"
             name="url"
-            type="url"
+            type="text"
             onChange={onChange}
             value={fields.url.value}
             placeholder="请输入网址"
@@ -83,7 +137,7 @@ class ChildForm extends Component {
         </div>
         <input
           className={classNames('btn', {
-            'btn-primary': !this.state.isValidate,
+            'btn-info': !this.state.isValidate,
             'btn-success': this.state.isValidate,
           })}
           id="submit"

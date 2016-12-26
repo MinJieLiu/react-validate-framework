@@ -33,6 +33,8 @@ export default schemas => FormComponent => (
     static propTypes = {
       values: PropTypes.object.isRequired,
       onChange: PropTypes.func,
+      addFields: PropTypes.func,
+      removeFields: PropTypes.func,
     };
 
     constructor(props) {
@@ -187,6 +189,42 @@ export default schemas => FormComponent => (
     };
 
     /**
+     * 添加一条或多条域
+     * @param newFields
+     */
+    handleAddFields = (newFields) => {
+      const { addFields } = this.props;
+      const { fields } = this.state;
+      Object.assign(fields, newFields);
+      this.setState({
+        fields,
+      });
+      // 调用父组件添加域
+      if (addFields) {
+        addFields(newFields);
+      }
+    };
+
+    /**
+     * 删除一条或多条域
+     * @param names
+     */
+    handleRemoveFields = (names) => {
+      const { removeFields } = this.props;
+      const { fields } = this.state;
+      names.forEach((name) => {
+        delete fields[name];
+      });
+      this.setState({
+        fields,
+      });
+      // 调用父组件删除域
+      if (removeFields) {
+        removeFields(names);
+      }
+    };
+
+    /**
      * 通过 name 手动验证单个组件
      * @param name
      * @return {Boolean}
@@ -217,6 +255,8 @@ export default schemas => FormComponent => (
           onChange={this.handleChange}
           validate={this.handleValidate}
           validateByName={this.handleValidateByName}
+          addFields={this.handleAddFields}
+          removeFields={this.handleRemoveFields}
         />
       );
     }

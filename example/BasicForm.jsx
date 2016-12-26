@@ -47,6 +47,8 @@ class BasicForm extends Component {
     onChange: PropTypes.func,
     validate: PropTypes.func,
     validateByName: PropTypes.func,
+    addFields: PropTypes.func,
+    removeFields: PropTypes.func,
   };
 
   // 自定义扩展验证方法
@@ -243,6 +245,7 @@ class BasicForm extends Component {
           <em className="valid-error-message">{fields.remarks.message}</em>
         </div>
         <ChildForm
+          {...this.props}
           values={{
             money: fields.money.value,
             url: fields.url.value,
