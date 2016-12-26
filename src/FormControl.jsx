@@ -189,6 +189,24 @@ export default schemas => FormComponent => (
     };
 
     /**
+     * 添加一条或多条验证规则
+     * @param schema
+     */
+    handleAddSchemas = (schema) => {
+      Object.assign(schemas, schema);
+    };
+
+    /**
+     * 删除一条或多条验证规则
+     * @param names
+     */
+    handleRemoveSchemas = (names) => {
+      names.forEach((name) => {
+        delete schemas[name]; // eslint-disable-line no-param-reassign
+      });
+    };
+
+    /**
      * 添加一条或多条域
      * @param newFields
      */
@@ -257,6 +275,8 @@ export default schemas => FormComponent => (
           validateByName={this.handleValidateByName}
           addFields={this.handleAddFields}
           removeFields={this.handleRemoveFields}
+          addSchemas={this.handleAddSchemas}
+          removeSchemas={this.handleRemoveSchemas}
         />
       );
     }

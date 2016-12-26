@@ -26,6 +26,8 @@ class ChildForm extends Component {
     validate: PropTypes.func,
     addFields: PropTypes.func,
     removeFields: PropTypes.func,
+    addSchemas: PropTypes.func,
+    removeSchemas: PropTypes.func,
   };
 
   state = {
@@ -42,25 +44,27 @@ class ChildForm extends Component {
 
   // 添加域
   handleAddFriends = () => {
-    const { addFields } = this.props;
-    Object.assign(schemas, {
-      friend: {
-        rules: 'required',
-        messages: '不能为空',
-      },
-    });
+    const { addFields, addSchemas } = this.props;
+    // value 为初始值
     addFields({
       friend: {
         value: '',
+      },
+    });
+    // 添加验证规则
+    addSchemas({
+      friend: {
+        rules: 'required',
+        messages: '不能为空',
       },
     });
   };
 
   // 删除域
   handleDeleteFriend = () => {
-    const { removeFields } = this.props;
+    const { removeFields, removeSchemas } = this.props;
     removeFields(['friend']);
-    delete schemas.friend;
+    removeSchemas(['friend']);
   };
 
   render() {
