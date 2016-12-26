@@ -47,8 +47,6 @@ class BasicForm extends Component {
     onChange: PropTypes.func,
     validate: PropTypes.func,
     validateByName: PropTypes.func,
-    addFields: PropTypes.func,
-    removeFields: PropTypes.func,
   };
 
   // 自定义扩展验证方法

@@ -31,6 +31,7 @@ const App = () => (
         </a>
       </div>
     </div>
+    {/* 无 onChange 为不受控 */}
     <BasicForm
       values={{
         email: '',

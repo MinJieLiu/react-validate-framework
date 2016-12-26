@@ -76,7 +76,7 @@ export default schemas => FormComponent => (
           // 添加新的 field
           fields[name] = {
             value: newValue,
-          }
+          };
         }
       });
 

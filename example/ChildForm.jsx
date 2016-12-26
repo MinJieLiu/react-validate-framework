@@ -22,10 +22,8 @@ class ChildForm extends Component {
 
   static propTypes = {
     fields: PropTypes.object,
-    formValues: PropTypes.object,
     onChange: PropTypes.func,
     validate: PropTypes.func,
-    validateByName: PropTypes.func,
     addFields: PropTypes.func,
     removeFields: PropTypes.func,
   };
@@ -49,7 +47,7 @@ class ChildForm extends Component {
       friend: {
         rules: 'required',
         messages: '不能为空',
-      }
+      },
     });
     addFields({
       friend: {
@@ -62,7 +60,7 @@ class ChildForm extends Component {
   handleDeleteFriend = () => {
     const { removeFields } = this.props;
     removeFields(['friend']);
-    delete schemas['friend'];
+    delete schemas.friend;
   };
 
   render() {
