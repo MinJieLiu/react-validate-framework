@@ -52,22 +52,32 @@ export default schemas => FormComponent => (
       };
 
       // 自定义验证方法
-      Object.assign(validateFramework, FormComponent.validator);
-      this.validator = {
-        ...validateFramework,
-      };
+      this.validator = Object.assign(validateFramework, FormComponent.validator);
     }
 
     componentWillReceiveProps(nextProps) {
       // 受控组件从父组件中更新 state
-      const { values } = nextProps;
+      const { values, onChange } = nextProps;
+      if (!onChange) {
+        return;
+      }
       const { fields } = this.state;
       Object.keys(values).forEach((name) => {
-        fields[name] = {
-          ...fields[name],
-          value: values[name],
-        };
+        const newValue = values[name];
+        // 存在，则验证新的数据
+        if (fields[name]) {
+          // diff 验证
+          if (fields[name].value !== newValue) {
+            this.assembleFieldValidate(name, newValue);
+          }
+        } else {
+          // 添加新的 field
+          fields[name] = {
+            value: newValue,
+          }
+        }
       });
+
       this.setState({
         fields,
       });
@@ -143,8 +153,14 @@ export default schemas => FormComponent => (
 
     // 表单改变事件监听
     handleChange = (e) => {
-      const { name, type, value } = e.target;
+      // 受控组件让父组件管理改变事件
       const { onChange } = this.props;
+      if (onChange) {
+        onChange(e);
+        return;
+      }
+
+      const { name, type, value } = e.target;
       const { fields } = this.state;
 
       // 依赖 name 属性
@@ -168,11 +184,6 @@ export default schemas => FormComponent => (
 
       // 验证并更新
       this.validateField(name, theValue);
-
-      // callback
-      if (onChange) {
-        onChange(e);
-      }
     };
 
     /**

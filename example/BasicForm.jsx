@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
 import FormControl from '../src';
 import './BasicForm.scss';
+import ChildForm from './ChildForm';
 
 const schemas = {
   email: {
@@ -241,6 +242,13 @@ class BasicForm extends Component {
           />
           <em className="valid-error-message">{fields.remarks.message}</em>
         </div>
+        <ChildForm
+          values={{
+            money: fields.money.value,
+            url: fields.url.value,
+          }}
+          onChange={onChange}
+        />
         <input
           className={classNames('btn', {
             'btn-primary': !this.state.isValidate,
@@ -249,7 +257,7 @@ class BasicForm extends Component {
           id="submit"
           type="button"
           onClick={this.handleSubmitClick}
-          value={this.state.isValidate ? '验证通过' : '提交'}
+          value={this.state.isValidate ? '验证通过' : '提交所有'}
         />
         <div className="well-sm">
           <p>表单值：</p>

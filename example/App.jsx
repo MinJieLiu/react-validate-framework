@@ -40,6 +40,8 @@ const App = () => (
         city: '',
         hobby: ['2'],
         remarks: '',
+        money: '',
+        url: '',
       }}
     />
   </div>
