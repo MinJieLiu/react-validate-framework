@@ -243,7 +243,7 @@ class BasicForm extends Component {
           <em className="valid-error-message">{fields.remarks.message}</em>
         </div>
         <ChildForm
-          {...this.props}
+          {...this.props} // 多级表单组件 需传递属性及方法 如 addFields、removeFields
           values={{
             money: fields.money.value,
             url: fields.url.value,
