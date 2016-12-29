@@ -3,21 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import validateFramework from 'validate-framework/lib/validate';
-
-/**
- * 扩展必填验证方法，支持数组判断
- * @param field
- * @return {boolean}
- */
-validateFramework.required = (field) => {
-  if (typeof field === 'string') {
-    return field !== '';
-  } else if (Array.isArray(field.value)) {
-    return field.value.length;
-  }
-  return field.value !== null && field.value !== '';
-};
+import Validator from 'validate-framework-utils';
 
 /**
  * 包装组件方法
@@ -53,8 +39,9 @@ export default schemas => FormComponent => (
         fields,
       };
 
-      // 自定义验证方法
-      this.validator = Object.assign(validateFramework, FormComponent.validator);
+      // 初始化验证组件
+      this.validator = new Validator();
+      Object.assign(this.validator, FormComponent.validator);
     }
 
     componentWillReceiveProps(nextProps) {
