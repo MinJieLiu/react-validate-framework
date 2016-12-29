@@ -6,8 +6,9 @@ import React, { Component, PropTypes } from 'react';
 import Validator from 'validate-framework-utils';
 
 /**
- * 包装组件方法
+ * React form 验证组件
  * @param schemas
+ * @return Component
  */
 export default schemas => FormComponent => (
 
@@ -41,6 +42,7 @@ export default schemas => FormComponent => (
 
       // 初始化验证组件
       this.validator = new Validator();
+      // 自定义验证方法
       Object.assign(this.validator, FormComponent.validator);
     }
 
@@ -241,7 +243,7 @@ export default schemas => FormComponent => (
     };
 
     // 验证当前组件
-    handleValidate = () => {
+    validate = () => {
       // 验证
       this.validateFields();
       const { fields } = this.state;
@@ -258,7 +260,7 @@ export default schemas => FormComponent => (
           fields={fields}
           formValues={this.formValues}
           onChange={this.handleChange}
-          validate={this.handleValidate}
+          validate={this.validate}
           validateByName={this.handleValidateByName}
           addFields={this.handleAddFields}
           removeFields={this.handleRemoveFields}

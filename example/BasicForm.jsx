@@ -76,9 +76,12 @@ class BasicForm extends Component {
 
   handleSubmitClick = () => {
     const { validate } = this.props;
+    // 验证本组件
     const isValidate = validate();
+    // 验证子组件
+    const isChildValidate = this.childForm.validate();
     this.setState({
-      isValidate,
+      isValidate: isValidate && isChildValidate,
     });
   };
 
@@ -244,6 +247,9 @@ class BasicForm extends Component {
         </div>
         <ChildForm
           {...this.props} // 多级表单组件 需传递属性及方法 如 addFields、removeFields
+          ref={(ref) => {
+            this.childForm = ref;
+          }}
           values={{
             money: fields.money.value,
             url: fields.url.value,
