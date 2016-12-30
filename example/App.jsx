@@ -39,6 +39,18 @@ export default class extends Component {
     });
   };
 
+  // 改变子组件表单值
+  handleChangeBasicForm = () => {
+    this.setState({
+      formValues: {
+        ...this.state.formValues,
+        email: 'example@example.com',
+        phone: '133333333333',
+        hobby: ['1', '2'],
+      },
+    });
+  };
+
   render() {
     return (
       <div className="app">
@@ -71,10 +83,16 @@ export default class extends Component {
             className="btn btn-info"
             onClick={this.handleValidateBasicForm}
           >
-            验证子组件并打印
+            验证子组件
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={this.handleChangeBasicForm}
+          >
+            通过参数改变子组件表单值
           </button>
           <div className="well-sm">
-            <p>验证状态：{`${this.state.isAllValid}`} （undefined | true | false）</p>
+            <p>验证状态：{String(this.state.isAllValid)} （undefined | true | false）</p>
             <p>Basic Form 表单值：{JSON.stringify(this.state.formValues)}</p>
           </div>
         </div>

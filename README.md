@@ -1,3 +1,3 @@
 # react-validate-framework
 
-A `react` validation component
+A lightweight and extensible React validation component

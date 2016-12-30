@@ -31,7 +31,7 @@ const schemas = {
     messages: '不能为空',
   },
   hobby: {
-    rules: 'required | selectLimit(2)',
+    rules: 'required | selectLimit(3)',
     messages: '不能为空 | 至少选择 {{param}} 项',
   },
   remarks: {
@@ -230,6 +230,17 @@ class BasicForm extends Component {
                 value="3"
               />
               跑步
+            </label>
+            <label htmlFor="hobby4">
+              <input
+                id="hobby4"
+                name="hobby"
+                type="checkbox"
+                onChange={onChange}
+                checked={fields.hobby.value.includes('4')}
+                value="4"
+              />
+              游戏
             </label>
           </div>
           <em className="valid-error-message">{fields.hobby.message}</em>

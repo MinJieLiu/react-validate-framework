@@ -35,7 +35,7 @@ export default (schemas, methods) => FormComponent => (
       const fields = {};
       Object.keys(values).forEach((name) => {
         fields[name] = {
-          className: classNames.static || '',
+          className: classNames.static,
           value: values[name],
         };
       });
@@ -46,6 +46,34 @@ export default (schemas, methods) => FormComponent => (
 
       // 初始化验证组件并自定义验证方法
       this.validator = new Validator().addMethods(methods);
+    }
+
+    componentWillReceiveProps(nextProps) {
+      // 从父组件中更新 state
+      const { values } = nextProps;
+      const { classNames } = this.props;
+      const { fields } = this.state;
+
+      Object.keys(values).forEach((name) => {
+        const newValue = values[name];
+        // 存在，则验证新的数据
+        if (fields[name]) {
+          // diff 验证
+          if (fields[name].value !== newValue) {
+            this.assembleFieldValidate(name, newValue);
+          }
+        } else {
+          // 不存在，则添加新的 field
+          fields[name] = {
+            className: classNames.static,
+            value: newValue,
+          };
+        }
+      });
+
+      this.setState({
+        fields,
+      });
     }
 
     /**
@@ -190,7 +218,7 @@ export default (schemas, methods) => FormComponent => (
       const { fields } = this.state;
       Object.keys(newFields).forEach((name) => {
         Object.assign(newFields[name], {
-          className: classNames.static || '',
+          className: classNames.static,
         });
       });
       // 组装
