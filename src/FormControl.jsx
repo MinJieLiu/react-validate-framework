@@ -7,10 +7,11 @@ import Validator from 'validate-framework-utils';
 
 /**
  * React form 验证组件
- * @param schemas
+ * @param schemas 验证规则
+ * @param methods 扩展验证方法
  * @return Component
  */
-export default schemas => FormComponent => (
+export default (schemas, methods) => FormComponent => (
 
   /**
    * 验证组件
@@ -44,7 +45,7 @@ export default schemas => FormComponent => (
       };
 
       // 初始化验证组件并自定义验证方法
-      this.validator = new Validator().addMethods(FormComponent.validator);
+      this.validator = new Validator().addMethods(methods);
     }
 
     /**
@@ -62,7 +63,7 @@ export default schemas => FormComponent => (
 
     /**
      * 组装数据
-     * 此方法改变了状态，下个组件中集中更新 state
+     * 此方法不 setState
      * @param name
      * @param value
      */
@@ -103,7 +104,7 @@ export default schemas => FormComponent => (
     }
 
     /**
-     * 通过 names 验证组件
+     * 通过 names 验证
      * @param names
      * @return {Boolean}
      */
@@ -121,7 +122,7 @@ export default schemas => FormComponent => (
     }
 
     /**
-     * 验证所有
+     * 验证所有域
      * @return {Boolean}
      */
     validateAllFields() {

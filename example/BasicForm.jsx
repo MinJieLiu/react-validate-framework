@@ -8,6 +8,7 @@ import FormControl from '../src';
 import './BasicForm.scss';
 import ChildForm from './ChildForm';
 
+// 验证规则
 const schemas = {
   email: {
     rules: 'required | isEmail | maxLength(32)',
@@ -47,6 +48,16 @@ const schemas = {
   },
 };
 
+// 自定义扩展验证方法
+const methods = {
+  selectLimit(field, param) {
+    if (Array.isArray(field.value)) {
+      return field.value.length >= param;
+    }
+    return false;
+  },
+};
+
 class BasicForm extends Component {
 
   static propTypes = {
@@ -56,16 +67,6 @@ class BasicForm extends Component {
     onChange: PropTypes.func,
     validate: PropTypes.func,
     validateByNames: PropTypes.func,
-  };
-
-  // 自定义扩展验证方法
-  static validator = {
-    selectLimit(field, param) {
-      if (Array.isArray(field.value)) {
-        return field.value.length >= param;
-      }
-      return false;
-    },
   };
 
   /**
@@ -266,4 +267,4 @@ class BasicForm extends Component {
   }
 }
 
-export default FormControl(schemas)(BasicForm);
+export default FormControl(schemas, methods)(BasicForm);

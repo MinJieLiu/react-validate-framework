@@ -39,6 +39,7 @@ class ChildForm extends Component {
   handleDeleteFriend = () => {
     const { removeFields, removeSchemas } = this.props;
     removeFields(['friend']);
+    // 这里演示动态移除
     removeSchemas(['friend']);
   };
 

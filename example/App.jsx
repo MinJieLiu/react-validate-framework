@@ -6,7 +6,7 @@ import React from 'react';
 import './App.scss';
 import BasicForm from './BasicForm';
 
-const App = () => (
+export default () => (
   <div className="app">
     <div className="jumbotron">
       <div className="container">
@@ -31,7 +31,6 @@ const App = () => (
         </a>
       </div>
     </div>
-    {/* 无 onChange 为不受控组件 */}
     <BasicForm
       classNames={{
         static: 'form-control',
@@ -52,5 +51,3 @@ const App = () => (
     />
   </div>
 );
-
-export default App;
