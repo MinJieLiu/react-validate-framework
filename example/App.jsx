@@ -33,6 +33,11 @@ const App = () => (
     </div>
     {/* 无 onChange 为不受控组件 */}
     <BasicForm
+      classNames={{
+        static: 'form-control',
+        success: 'valid-success',
+        error: 'valid-error',
+      }}
       values={{
         email: '',
         phone: '',

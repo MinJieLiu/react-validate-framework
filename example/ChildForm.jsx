@@ -79,10 +79,7 @@ class ChildForm extends Component {
         <div className="form-group">
           <label htmlFor="money">金额：</label>
           <input
-            className={classNames('form-control', {
-              'valid-error': fields.money.result === false,
-              'valid-success': fields.money.result,
-            })}
+            className={fields.money.className}
             id="money"
             name="money"
             type="text"
@@ -106,10 +103,7 @@ class ChildForm extends Component {
               <div className="form-group">
                 <label htmlFor="friend">名字：</label>
                 <input
-                  className={classNames('form-control', {
-                    'valid-error': fields.friend.result === false,
-                    'valid-success': fields.friend.result,
-                  })}
+                  className={fields.friend.className}
                   id="friend"
                   name="friend"
                   type="text"
@@ -124,10 +118,7 @@ class ChildForm extends Component {
         <div className="form-group">
           <label htmlFor="url">网址：</label>
           <input
-            className={classNames('form-control', {
-              'valid-error': fields.url.result === false,
-              'valid-success': fields.url.result,
-            })}
+            className={fields.url.className}
             id="url"
             name="url"
             type="text"

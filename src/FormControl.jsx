@@ -19,19 +19,25 @@ export default schemas => FormComponent => (
 
     static propTypes = {
       values: PropTypes.object.isRequired,
+      classNames: PropTypes.object,
       onChange: PropTypes.func,
       addFields: PropTypes.func,
       removeFields: PropTypes.func,
     };
 
+    static defaultProps = {
+      classNames: {},
+    };
+
     constructor(props) {
       super(props);
-      const values = props.values;
+      const { classNames, values } = props;
 
       // 将初始化数据组装成 fields
       const fields = {};
       Object.keys(values).forEach((name) => {
         fields[name] = {
+          className: classNames.static || '',
           value: values[name],
         };
       });
@@ -40,10 +46,8 @@ export default schemas => FormComponent => (
         fields,
       };
 
-      // 初始化验证组件
-      this.validator = new Validator();
-      // 自定义验证方法
-      Object.assign(this.validator, FormComponent.validator);
+      // 初始化验证组件并自定义验证方法
+      this.validator = new Validator().addMethods(FormComponent.validator);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -94,17 +98,28 @@ export default schemas => FormComponent => (
      * @param value
      */
     assembleFieldValidate(name, value) {
+      const { classNames } = this.props;
       const { fields } = this.state;
       // 验证
       // 无 schema 则不验证
+      const assembleField = {};
       const schema = schemas[name] && Object.assign(schemas[name], { value });
-      const { result, error } = schema ? this.validator.validateByField(schema) : {};
-
+      if (schema) {
+        const { result, error } = this.validator.validateByField(schema);
+        // 组装类名
+        const classNameArr = [classNames.static];
+        classNameArr.push(result ? classNames.success : classNames.error);
+        // 只有在当前组件下组装详细数据（具有 schema 可验证）
+        Object.assign(assembleField, {
+          result,
+          className: classNameArr.join('\u{20}'),
+          message: result ? error.message : null,
+        });
+      }
       // 组装
       Object.assign(fields[name], {
+        ...assembleField,
         value,
-        result,
-        message: error ? error.message : null,
       });
     }
 
@@ -202,6 +217,7 @@ export default schemas => FormComponent => (
     handleAddFields = (newFields) => {
       const { addFields } = this.props;
       const { fields } = this.state;
+      // 组装
       Object.assign(fields, newFields);
       this.setState({
         fields,

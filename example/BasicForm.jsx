@@ -78,10 +78,8 @@ class BasicForm extends Component {
     const { validate } = this.props;
     // 验证本组件
     const isValidate = validate();
-    // 验证子组件
-    const isChildValidate = this.childForm.validate();
     this.setState({
-      isValidate: isValidate && isChildValidate,
+      isValidate,
     });
   };
 
@@ -98,10 +96,7 @@ class BasicForm extends Component {
         <div className="form-group">
           <label htmlFor="email">邮箱：</label>
           <input
-            className={classNames('form-control', {
-              'valid-error': fields.email.result === false,
-              'valid-success': fields.email.result,
-            })}
+            className={fields.email.className}
             id="email"
             name="email"
             type="email"
@@ -125,7 +120,7 @@ class BasicForm extends Component {
         <div className="form-group">
           <label htmlFor="phone">手机：</label>
           <input
-            className="form-control"
+            className={fields.phone.className}
             id="phone"
             name="phone"
             type="text"
@@ -138,7 +133,7 @@ class BasicForm extends Component {
         <div className="form-group">
           <label htmlFor="birthday">生日：</label>
           <input
-            className="form-control"
+            className={fields.birthday.className}
             id="birthday"
             name="birthday"
             type="text"
@@ -179,7 +174,7 @@ class BasicForm extends Component {
         <div className="form-group">
           <label htmlFor="city">城市：</label>
           <select
-            className="form-control"
+            className={fields.city.className}
             id="city"
             name="city"
             onChange={onChange}
@@ -235,7 +230,7 @@ class BasicForm extends Component {
         <div className="form-group">
           <label htmlFor="remarks">简介：</label>
           <textarea
-            className="form-control"
+            className={fields.remarks.className}
             id="remarks"
             name="remarks"
             rows="3"
@@ -249,6 +244,10 @@ class BasicForm extends Component {
           {...this.props} // 多级表单组件 需传递属性及方法 如 addFields、removeFields
           ref={(ref) => {
             this.childForm = ref;
+          }}
+          classNames={{
+            success: 'valid-success',
+            error: 'valid-error',
           }}
           values={{
             money: fields.money.value,
