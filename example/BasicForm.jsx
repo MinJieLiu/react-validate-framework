@@ -99,7 +99,7 @@ class BasicForm extends Component {
 
     return (
       <div className="container">
-        <h3>表单验证</h3>
+        <h3>BasicForm 组件</h3>
         <div className="form-group">
           <label htmlFor="email">邮箱：</label>
           <input

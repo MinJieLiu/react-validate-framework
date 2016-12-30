@@ -51,7 +51,7 @@ class ChildForm extends Component {
 
     return (
       <div className="child-form">
-        <h3>子组件</h3>
+        <h3>ChildForm 组件</h3>
         <div className="form-group">
           <label htmlFor="money">金额：</label>
           <input
