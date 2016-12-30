@@ -22,6 +22,7 @@ class ChildForm extends Component {
 
   static propTypes = {
     fields: PropTypes.object,
+    isAllValid: PropTypes.bool,
     onChange: PropTypes.func,
     validate: PropTypes.func,
     addFields: PropTypes.func,
@@ -30,16 +31,9 @@ class ChildForm extends Component {
     removeSchemas: PropTypes.func,
   };
 
-  state = {
-    isValidate: false,
-  };
-
   handleSubmitClick = () => {
     const { validate } = this.props;
-    const isValidate = validate();
-    this.setState({
-      isValidate,
-    });
+    validate();
   };
 
   // 添加域
@@ -71,6 +65,7 @@ class ChildForm extends Component {
     const {
       fields,
       onChange,
+      isAllValid,
     } = this.props;
 
     return (
@@ -130,13 +125,13 @@ class ChildForm extends Component {
         </div>
         <input
           className={classNames('btn', {
-            'btn-info': !this.state.isValidate,
-            'btn-success': this.state.isValidate,
+            'btn-info': !isAllValid,
+            'btn-success': isAllValid,
           })}
           id="submit"
           type="button"
           onClick={this.handleSubmitClick}
-          value={this.state.isValidate ? '验证通过' : '验证子组件'}
+          value={isAllValid ? '验证通过' : '验证组件'}
         />
       </div>
     );

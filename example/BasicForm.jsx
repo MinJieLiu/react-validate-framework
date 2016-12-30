@@ -44,9 +44,10 @@ class BasicForm extends Component {
   static propTypes = {
     fields: PropTypes.object,
     formValues: PropTypes.object,
+    isAllValid: PropTypes.bool,
     onChange: PropTypes.func,
     validate: PropTypes.func,
-    validateByName: PropTypes.func,
+    validateByNames: PropTypes.func,
   };
 
   // 自定义扩展验证方法
@@ -59,19 +60,15 @@ class BasicForm extends Component {
     },
   };
 
-  state = {
-    isValidate: false,
-  };
-
   /**
    * 删除验证规则
    * @param name
    */
   handleRemoveSchema = (name) => {
-    const { validateByName } = this.props;
+    const { validateByNames } = this.props;
     delete schemas[name];
     // 手动验证
-    validateByName(name);
+    validateByNames(name);
   };
 
   handleSubmitClick = () => {
@@ -88,6 +85,7 @@ class BasicForm extends Component {
       fields,
       onChange,
       formValues,
+      isAllValid,
     } = this.props;
 
     return (
@@ -241,11 +239,8 @@ class BasicForm extends Component {
           <em className="valid-error-message">{fields.remarks.message}</em>
         </div>
         <ChildForm
-          {...this.props} // 多级表单组件 需传递属性及方法 如 addFields、removeFields
-          ref={(ref) => {
-            this.childForm = ref;
-          }}
           classNames={{
+            static: 'form-control',
             success: 'valid-success',
             error: 'valid-error',
           }}
@@ -253,17 +248,16 @@ class BasicForm extends Component {
             money: fields.money.value,
             url: fields.url.value,
           }}
-          onChange={onChange}
         />
         <input
           className={classNames('btn', {
-            'btn-primary': !this.state.isValidate,
-            'btn-success': this.state.isValidate,
+            'btn-primary': !isAllValid,
+            'btn-success': isAllValid,
           })}
           id="submit"
           type="button"
           onClick={this.handleSubmitClick}
-          value={this.state.isValidate ? '验证通过' : '提交所有'}
+          value={isAllValid ? '验证通过' : '提交'}
         />
         <div className="well-sm">
           <p>表单值：</p>

@@ -20,9 +20,6 @@ export default schemas => FormComponent => (
     static propTypes = {
       values: PropTypes.object.isRequired,
       classNames: PropTypes.object,
-      onChange: PropTypes.func,
-      addFields: PropTypes.func,
-      removeFields: PropTypes.func,
     };
 
     static defaultProps = {
@@ -50,34 +47,6 @@ export default schemas => FormComponent => (
       this.validator = new Validator().addMethods(FormComponent.validator);
     }
 
-    componentWillReceiveProps(nextProps) {
-      // 受控组件从父组件中更新 state
-      const { values, onChange } = nextProps;
-      if (!onChange) {
-        return;
-      }
-      const { fields } = this.state;
-      Object.keys(values).forEach((name) => {
-        const newValue = values[name];
-        // 存在，则验证新的数据
-        if (fields[name]) {
-          // diff 验证
-          if (fields[name].value !== newValue) {
-            this.assembleFieldValidate(name, newValue);
-          }
-        } else {
-          // 添加新的 field
-          fields[name] = {
-            value: newValue,
-          };
-        }
-      });
-
-      this.setState({
-        fields,
-      });
-    }
-
     /**
      * 获取表单值列表
      * @return {Object}
@@ -102,24 +71,21 @@ export default schemas => FormComponent => (
       const { fields } = this.state;
       // 验证
       // 无 schema 则不验证
-      const assembleField = {};
       const schema = schemas[name] && Object.assign(schemas[name], { value });
-      if (schema) {
-        const { result, error } = this.validator.validateByField(schema);
-        // 组装类名
-        const classNameArr = [classNames.static];
-        classNameArr.push(result ? classNames.success : classNames.error);
-        // 只有在当前组件下组装详细数据（具有 schema 可验证）
-        Object.assign(assembleField, {
-          result,
-          className: classNameArr.join('\u{20}'),
-          message: result ? error.message : null,
-        });
-      }
+      const { result, error } = schema ? this.validator.validateByField(schema) : {};
+      // 组装类名
+      // 验证成功和验证失败添加相应类
+      const classNameArray = [
+        classNames.static,
+        result ? classNames.success : null,
+        result === false ? classNames.error : null,
+      ];
       // 组装
       Object.assign(fields[name], {
-        ...assembleField,
         value,
+        className: classNameArray.filter(item => item).join('\u{20}'),
+        result,
+        message: error ? error.message : null,
       });
     }
 
@@ -133,39 +99,38 @@ export default schemas => FormComponent => (
       const { fields } = this.state;
       // 组装数据
       this.assembleFieldValidate(name, value);
-      // 集中更新
-      this.setState({
-        fields,
-      });
-
       return fields[name].result;
     }
 
     /**
-     * 验证所有
-     * @return {Object} fields
+     * 通过 names 验证组件
+     * @param names
+     * @return {Boolean}
      */
-    validateFields() {
+    validateByNames(...names) {
       const { fields } = this.state;
-      Object.keys(schemas).forEach((name) => {
-        // 组装数据
-        this.assembleFieldValidate(name, fields[name].value);
+      let isValid = true;
+      names.forEach((name) => {
+        const result = this.validateField(name, fields[name].value);
+        // 排除 未验证 和 验证成功
+        if (result === false) {
+          isValid = false;
+        }
       });
-      // 集中更新
-      this.setState({
-        fields,
-      });
+      return isValid;
+    }
+
+    /**
+     * 验证所有
+     * @return {Boolean}
+     */
+    validateAllFields() {
+      const names = Object.keys(schemas);
+      return this.validateByNames(...names);
     }
 
     // 表单改变事件监听
     handleChange = (e) => {
-      // 受控组件让父组件管理改变事件
-      const { onChange } = this.props;
-      if (onChange) {
-        onChange(e);
-        return;
-      }
-
       const { name, type, value } = e.target;
       const { fields } = this.state;
 
@@ -188,8 +153,13 @@ export default schemas => FormComponent => (
         theValue = value;
       }
 
-      // 验证并更新
+      // 验证
       this.validateField(name, theValue);
+
+      // 更新
+      this.setState({
+        fields,
+      });
     };
 
     /**
@@ -215,17 +185,19 @@ export default schemas => FormComponent => (
      * @param newFields
      */
     handleAddFields = (newFields) => {
-      const { addFields } = this.props;
+      const { classNames } = this.props;
       const { fields } = this.state;
+      Object.keys(newFields).forEach((name) => {
+        Object.assign(newFields[name], {
+          className: classNames.static || '',
+        });
+      });
       // 组装
       Object.assign(fields, newFields);
+      // 更新
       this.setState({
         fields,
       });
-      // 调用父组件添加域
-      if (addFields) {
-        addFields(newFields);
-      }
     };
 
     /**
@@ -233,51 +205,56 @@ export default schemas => FormComponent => (
      * @param names
      */
     handleRemoveFields = (names) => {
-      const { removeFields } = this.props;
       const { fields } = this.state;
       names.forEach((name) => {
         delete fields[name];
       });
+      // 更新
       this.setState({
         fields,
       });
-      // 调用父组件删除域
-      if (removeFields) {
-        removeFields(names);
-      }
     };
 
     /**
-     * 通过 name 手动验证单个组件
-     * @param name
+     * 通过 names 验证组件
+     * @param names
      * @return {Boolean}
      */
-    handleValidateByName = (name) => {
+    handleValidateByNames = (...names) => {
+      const result = this.validateByNames(...names);
       const { fields } = this.state;
-      const value = fields[name].value;
-      return this.validateField(name, value);
+      // 更新
+      this.setState({
+        fields,
+      });
+      return result;
     };
 
-    // 验证当前组件
-    validate = () => {
+    // 验证所有
+    handleValidate = () => {
       // 验证
-      this.validateFields();
+      const isAllValid = this.validateAllFields();
       const { fields } = this.state;
-      // 排除 验证成功 和 未验证 状态
-      return Object.keys(fields).every(name => fields[name].result !== false);
+      // 更新
+      this.setState({
+        fields,
+        isAllValid,
+      });
+      return isAllValid;
     };
 
     render() {
-      const { fields } = this.state;
+      const { fields, isAllValid } = this.state;
 
       return (
         <FormComponent
           {...this.props}
           fields={fields}
+          isAllValid={isAllValid}
           formValues={this.formValues}
           onChange={this.handleChange}
-          validate={this.validate}
-          validateByName={this.handleValidateByName}
+          validate={this.handleValidate}
+          validateByNames={this.handleValidateByNames}
           addFields={this.handleAddFields}
           removeFields={this.handleRemoveFields}
           addSchemas={this.handleAddSchemas}
