@@ -37,6 +37,14 @@ const schemas = {
     rules: 'minLength(10) | maxLength(60)',
     messages: '不能少于 {{param}} 个字符 | 不能超过 {{param}} 个字符',
   },
+  money: {
+    rules: 'required | isNumeric | maxLength(5)',
+    messages: '不能为空 | 请输入整数金额 | 不能超过 {{param}} 个字符',
+  },
+  url: {
+    rules: 'isUrl',
+    messages: '请输入链接地址',
+  },
 };
 
 class BasicForm extends Component {
@@ -238,17 +246,7 @@ class BasicForm extends Component {
           />
           <em className="valid-error-message">{fields.remarks.message}</em>
         </div>
-        <ChildForm
-          classNames={{
-            static: 'form-control',
-            success: 'valid-success',
-            error: 'valid-error',
-          }}
-          values={{
-            money: fields.money.value,
-            url: fields.url.value,
-          }}
-        />
+        <ChildForm {...this.props} />
         <input
           className={classNames('btn', {
             'btn-primary': !isAllValid,

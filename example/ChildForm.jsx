@@ -3,37 +3,17 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import classNames from 'classnames';
-import FormControl from '../src';
 import './ChildForm.scss';
-
-const schemas = {
-  money: {
-    rules: 'required | isNumeric | maxLength(5)',
-    messages: '不能为空 | 请输入整数金额 | 不能超过 {{param}} 个字符',
-  },
-  url: {
-    rules: 'isUrl',
-    messages: '请输入链接地址',
-  },
-};
 
 class ChildForm extends Component {
 
   static propTypes = {
     fields: PropTypes.object,
-    isAllValid: PropTypes.bool,
     onChange: PropTypes.func,
-    validate: PropTypes.func,
     addFields: PropTypes.func,
     removeFields: PropTypes.func,
     addSchemas: PropTypes.func,
     removeSchemas: PropTypes.func,
-  };
-
-  handleSubmitClick = () => {
-    const { validate } = this.props;
-    validate();
   };
 
   // 添加域
@@ -46,6 +26,7 @@ class ChildForm extends Component {
       },
     });
     // 添加验证规则
+    // 规则可以预先定好，这里演示动态添加
     addSchemas({
       friend: {
         rules: 'required',
@@ -65,7 +46,6 @@ class ChildForm extends Component {
     const {
       fields,
       onChange,
-      isAllValid,
     } = this.props;
 
     return (
@@ -123,19 +103,9 @@ class ChildForm extends Component {
           />
           <em className="valid-error-message">{fields.url.message}</em>
         </div>
-        <input
-          className={classNames('btn', {
-            'btn-info': !isAllValid,
-            'btn-success': isAllValid,
-          })}
-          id="submit"
-          type="button"
-          onClick={this.handleSubmitClick}
-          value={isAllValid ? '验证通过' : '验证组件'}
-        />
       </div>
     );
   }
 }
 
-export default FormControl(schemas)(ChildForm);
+export default ChildForm;
