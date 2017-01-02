@@ -7,6 +7,7 @@ A lightweight and extensible React validation component
     npm i react-validate-framework --save
 
 This component relies on `react`.
+
 You can check out the code to see examples.
 
 > BasicForm.jsx

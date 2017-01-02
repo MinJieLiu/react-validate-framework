@@ -66,17 +66,7 @@ class BasicForm extends Component {
     isAllValid: PropTypes.bool,
     onChange: PropTypes.func,
     validate: PropTypes.func,
-    validateByNames: PropTypes.func,
-  };
-
-  /**
-   * Delete the validation rule
-   * @param name
-   */
-  handleRemoveSchema = (name) => {
-    const { validateByNames } = this.props;
-    delete schemas[name];
-    validateByNames(name);
+    removeSchemas: PropTypes.func,
   };
 
   handleSubmitClick = () => {
@@ -91,6 +81,7 @@ class BasicForm extends Component {
       onChange,
       formValues,
       isAllValid,
+      removeSchemas,
     } = this.props;
 
     return (
@@ -114,7 +105,7 @@ class BasicForm extends Component {
             className="btn btn-default"
             type="button"
             onClick={() => {
-              this.handleRemoveSchema('email');
+              removeSchemas('email');
             }}
           >
             Do not validate the email

@@ -122,7 +122,7 @@ export default (schemas, methods) => FormComponent => (
         value,
         className: classNameArray.filter(item => item).join('\u{20}'),
         result,
-        message: error ? error.message : null,
+        message: error ? error.message : undefined,
       });
     }
 
@@ -148,7 +148,7 @@ export default (schemas, methods) => FormComponent => (
       const { fields } = this.state;
       let isValid = true;
       names.forEach((name) => {
-        const result = this.validateField(name, fields[name].value);
+        const result = fields[name] && this.validateField(name, fields[name].value);
         // Exclude unauthenticated and validated successfully
         if (result === false) {
           isValid = false;
@@ -213,9 +213,16 @@ export default (schemas, methods) => FormComponent => (
      * Delete one or more validation rules
      * @param names
      */
-    removeSchemas = (names) => {
+    removeSchemas = (...names) => {
+      const { fields } = this.state;
       names.forEach((name) => {
         delete schemas[name]; // eslint-disable-line no-param-reassign
+      });
+      // Validate the deleted status
+      this.validateFieldsByNames(...names);
+      // Update
+      this.setState({
+        fields,
       });
     };
 
@@ -242,7 +249,7 @@ export default (schemas, methods) => FormComponent => (
      * Deletes one or more fields
      * @param names
      */
-    removeFields = (names) => {
+    removeFields = (...names) => {
       const { fields } = this.state;
       names.forEach((name) => {
         delete fields[name];
