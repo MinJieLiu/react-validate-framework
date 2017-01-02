@@ -191,14 +191,14 @@ export default class extends Component {
 #### FormControl params
 
 | name | type | required | default | description |
-| :- | :- | :- | :- | :- |
+| :--- | :--- | :--- | :--- | :--- |
 | values | Object | true | | Key-value pairs for `name` and` value` |
 | classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
 
 #### Form params
 
 | name | type | default | description |
-| :- | :- | :- | :- |
+| :--- | :--- | :--- | :--- |
 | fields | Object | | The collection of fields |
 | isAllValid | Boolean | | Gets the global validation status |
 | formValues | Object | | Gets a list of form values |
