@@ -1,5 +1,5 @@
 /**
- * Created by MingYi on 2016/9/25.
+ * Export default
  */
 
 export default from './FormControl';

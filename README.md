@@ -2,6 +2,9 @@
 
 A lightweight and extensible React validation component
 
+[![npm](https://img.shields.io/npm/v/react-validate-framework.svg?style=flat-square)](https://www.npmjs.com/package/react-validate-framework)
+[![npm](https://img.shields.io/npm/dt/react-validate-framework.svg?style=flat-square)](https://github.com/MinJieLiu/react-validate-framework)
+
 ## How to use?
 
     npm i react-validate-framework --save
@@ -185,13 +188,24 @@ export default class extends Component {
 
 ### API
 
- * fields
- * isAllValid
- * formValues
- * onChange
- * validate
- * validateByNames
- * addFields
- * removeFields
- * addSchemas
- * removeSchemas
+#### FormControl params
+
+| name | type | required | default | description |
+| :- | :- | :- | :- | :- |
+| values | Object | true | | Key-value pairs for `name` and` value` |
+| classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
+
+#### Form params
+
+| name | type | default | description |
+| :- | :- | :- | :- |
+| fields | Object | | The collection of fields |
+| isAllValid | Boolean | | Gets the global validation status |
+| formValues | Object | | Gets a list of form values |
+| onChange | function | | Form change event listener |
+| validate | function | | Validate all fields |
+| validateByNames | function | | Validate the component through names |
+| addFields | function | | Add one or more fields |
+| removeFields | function | | Deletes one or more fields |
+| addSchemas | function | | Add one or more validation rules |
+| removeSchemas | function | | Delete one or more validation rules |
