@@ -16,30 +16,25 @@ class ChildForm extends Component {
     removeSchemas: PropTypes.func,
   };
 
-  // 添加域
   handleAddFriends = () => {
     const { addFields, addSchemas } = this.props;
-    // value 为初始值
+    // init value
     addFields({
       friend: {
         value: '',
       },
     });
-    // 添加验证规则
-    // 规则可以预先定好，这里演示动态添加
     addSchemas({
       friend: {
         rules: 'required',
-        messages: '不能为空',
+        messages: 'Can not be empty!',
       },
     });
   };
 
-  // 删除域
   handleDeleteFriend = () => {
     const { removeFields, removeSchemas } = this.props;
     removeFields(['friend']);
-    // 这里演示动态移除
     removeSchemas(['friend']);
   };
 
@@ -51,9 +46,9 @@ class ChildForm extends Component {
 
     return (
       <div className="child-form">
-        <h3>ChildForm 组件</h3>
+        <h3>ChildForm</h3>
         <div className="form-group">
-          <label htmlFor="money">金额：</label>
+          <label htmlFor="money">Money:</label>
           <input
             className={fields.money.className}
             id="money"
@@ -61,7 +56,7 @@ class ChildForm extends Component {
             type="text"
             onChange={onChange}
             value={fields.money.value}
-            placeholder="请输入金额"
+            placeholder="Please enter money"
           />
           <em className="valid-error-message">{fields.money.message}</em>
         </div>
@@ -70,14 +65,14 @@ class ChildForm extends Component {
             className="btn btn-default"
             onClick={fields.friend ? this.handleDeleteFriend : this.handleAddFriends}
           >
-            {fields.friend ? '删除朋友' : '添加朋友'}
+            {fields.friend ? 'Delete a friend' : 'Add a friend'}
           </button>
         </div>
         {
           fields.friend
             ? (
               <div className="form-group">
-                <label htmlFor="friend">名字：</label>
+                <label htmlFor="friend">Name:</label>
                 <input
                   className={fields.friend.className}
                   id="friend"
@@ -85,14 +80,14 @@ class ChildForm extends Component {
                   type="text"
                   onChange={onChange}
                   value={fields.friend.value}
-                  placeholder="请输入名字"
+                  placeholder="Please enter a name"
                 />
                 <em className="valid-error-message">{fields.friend.message}</em>
               </div>
             ) : null
         }
         <div className="form-group">
-          <label htmlFor="url">网址：</label>
+          <label htmlFor="url">Url:</label>
           <input
             className={fields.url.className}
             id="url"
@@ -100,7 +95,7 @@ class ChildForm extends Component {
             type="text"
             onChange={onChange}
             value={fields.url.value}
-            placeholder="请输入网址"
+            placeholder="Please enter a URL"
           />
           <em className="valid-error-message">{fields.url.message}</em>
         </div>

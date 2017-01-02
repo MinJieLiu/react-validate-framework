@@ -23,14 +23,14 @@ export default class extends Component {
     isAllValid: undefined,
   };
 
-  // 验证子组件表单
+  // Validate the BasicForm
   handleValidateBasicForm = () => {
     const basicForm = this.basicForm;
     // 验证
     const isAllValid = basicForm.validate();
     let { formValues } = this.state;
     if (isAllValid) {
-      // 获取表单值
+      // Get form values
       formValues = basicForm.formValues;
     }
     this.setState({
@@ -39,7 +39,7 @@ export default class extends Component {
     });
   };
 
-  // 改变子组件表单值
+  // Change the form value
   handleChangeBasicForm = () => {
     this.setState({
       formValues: {
@@ -57,7 +57,7 @@ export default class extends Component {
         <div className="jumbotron">
           <div className="container">
             <h1 className="title">react-validate-framework</h1>
-            <h2 className="title">简单、自由的 react 表单验证组件</h2>
+            <h2 className="title">A lightweight and extensible React validation component</h2>
             <h3>
               <iframe
                 src="https://ghbtns.com/github-btn.html?user=MinJieLiu&repo=react-validate-framework&type=star&count=true&size=large"
@@ -78,22 +78,22 @@ export default class extends Component {
           </div>
         </div>
         <div className="container">
-          <h2>App 组件</h2>
+          <h2>App component</h2>
           <button
             className="btn btn-info"
             onClick={this.handleValidateBasicForm}
           >
-            验证子组件
+            Validate BasicForm
           </button>
           <button
             className="btn btn-default"
             onClick={this.handleChangeBasicForm}
           >
-            通过参数改变子组件表单值
+            Change the sub component form value
           </button>
           <div className="well-sm">
-            <p>验证状态：{String(this.state.isAllValid)} （undefined | true | false）</p>
-            <p>Basic Form 表单值：{JSON.stringify(this.state.formValues)}</p>
+            <p>Status：{String(this.state.isAllValid)} （undefined | true | false）</p>
+            <p>Basic Form values：{JSON.stringify(this.state.formValues)}</p>
           </div>
         </div>
         <BasicForm

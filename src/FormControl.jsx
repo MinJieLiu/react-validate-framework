@@ -1,20 +1,20 @@
 /**
- * Created by MingYi on 2016/12/23.
+ * A lightweight and extensible React validation component
  */
 
 import React, { Component, PropTypes } from 'react';
 import Validator from 'validate-framework-utils';
 
 /**
- * React form 验证组件
- * @param schemas 验证规则
- * @param methods 扩展验证方法
+ * React validation component
+ * @param schemas
+ * @param methods Extended Validation Method
  * @return Component
  */
 export default (schemas, methods) => FormComponent => (
 
   /**
-   * 验证组件
+   * Returns a react form
    */
   class FormControl extends Component {
 
@@ -31,7 +31,7 @@ export default (schemas, methods) => FormComponent => (
       super(props);
       const { classNames, values } = props;
 
-      // 将初始化数据组装成 fields
+      // Assemble the initialization data into fields
       const fields = {};
       Object.keys(values).forEach((name) => {
         fields[name] = {
@@ -44,26 +44,26 @@ export default (schemas, methods) => FormComponent => (
         fields,
       };
 
-      // 初始化验证组件并自定义验证方法
+      // Initializes the validation component and customizes the validation method
       this.validator = new Validator().addMethods(methods);
     }
 
     componentWillReceiveProps(nextProps) {
-      // 从父组件中更新 state
+      // Updates the state from the parent component
       const { values } = nextProps;
       const { classNames } = this.props;
       const { fields } = this.state;
 
       Object.keys(values).forEach((name) => {
         const newValue = values[name];
-        // 存在，则验证新的数据
+        // Validate the new data
         if (fields[name]) {
-          // diff 验证
+          // diff
           if (fields[name].value !== newValue) {
             this.assembleFieldValidate(name, newValue);
           }
         } else {
-          // 不存在，则添加新的 field
+          // Add a new field
           fields[name] = {
             className: classNames.static,
             value: newValue,
@@ -77,7 +77,7 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
-     * 获取表单值列表
+     * Gets a list of form values
      * @return {Object}
      */
     get formValues() {
@@ -90,7 +90,7 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
-     * 获取整体验证状态
+     * Gets the global validation status
      * @return {Boolean}
      */
     get isAllValid() {
@@ -99,26 +99,25 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
-     * 组装数据
-     * 此方法不 setState
+     * Assemble the data
+     * This method is not operational
      * @param name
      * @param value
      */
     assembleFieldValidate(name, value) {
       const { classNames } = this.props;
       const { fields } = this.state;
-      // 验证
-      // 无 schema 则不验证
+      // No schema is not to validate
       const schema = schemas[name] && Object.assign(schemas[name], { value });
       const { result, error } = schema ? this.validator.validateByField(schema) : {};
-      // 组装类名
-      // 验证成功和验证失败添加相应类
+      // Assembly class name
+      // Validation success and validation failure Add the appropriate class
       const classNameArray = [
         classNames.static,
         result ? classNames.success : null,
         result === false ? classNames.error : null,
       ];
-      // 组装
+      // Assemble
       Object.assign(fields[name], {
         value,
         className: classNameArray.filter(item => item).join('\u{20}'),
@@ -128,20 +127,20 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
-     * 验证单个域
+     * Validate a single field
      * @param name
      * @param value
      * @return {Boolean}
      */
     validateField(name, value) {
       const { fields } = this.state;
-      // 组装数据
+      // Assemble
       this.assembleFieldValidate(name, value);
       return fields[name].result;
     }
 
     /**
-     * 通过 names 验证
+     * Validate fields by names
      * @param names
      * @return {Boolean}
      */
@@ -150,7 +149,7 @@ export default (schemas, methods) => FormComponent => (
       let isValid = true;
       names.forEach((name) => {
         const result = this.validateField(name, fields[name].value);
-        // 排除 未验证 和 验证成功
+        // Exclude unauthenticated and validated successfully
         if (result === false) {
           isValid = false;
         }
@@ -159,7 +158,7 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
-     * 验证所有域
+     * Validate all fields
      * @return {Boolean}
      */
     validateFieldsAll() {
@@ -167,18 +166,18 @@ export default (schemas, methods) => FormComponent => (
       return this.validateFieldsByNames(...names);
     }
 
-    // 表单改变事件监听
+    // Form change event listener
     handleChange = (e) => {
       const { name, type, value } = e.target;
       const { fields } = this.state;
 
-      // 依赖 name 属性
+      // Dependent on the name attribute
       if (!name) {
         return;
       }
 
       let theValue;
-      // checkbox 处理
+      // Checkbox processing
       if (type === 'checkbox') {
         theValue = fields[name].value.slice();
         const index = theValue.indexOf(value);
@@ -191,19 +190,19 @@ export default (schemas, methods) => FormComponent => (
         theValue = value;
       }
 
-      // 验证
+      // Validate
       this.validateField(name, theValue);
 
-      // 同步 values 外部状态
+      // Synchronize values external state
       this.props.values[name] = theValue;
-      // 更新
+      // Update
       this.setState({
         fields,
       });
     };
 
     /**
-     * 添加一条或多条验证规则
+     * Add one or more validation rules
      * @param schema
      */
     addSchemas = (schema) => {
@@ -211,7 +210,7 @@ export default (schemas, methods) => FormComponent => (
     };
 
     /**
-     * 删除一条或多条验证规则
+     * Delete one or more validation rules
      * @param names
      */
     removeSchemas = (names) => {
@@ -221,7 +220,7 @@ export default (schemas, methods) => FormComponent => (
     };
 
     /**
-     * 添加一条或多条域
+     * Add one or more fields
      * @param newFields
      */
     addFields = (newFields) => {
@@ -232,16 +231,15 @@ export default (schemas, methods) => FormComponent => (
           className: classNames.static,
         });
       });
-      // 组装
       Object.assign(fields, newFields);
-      // 更新
+      // Update
       this.setState({
         fields,
       });
     };
 
     /**
-     * 删除一条或多条域
+     * Deletes one or more fields
      * @param names
      */
     removeFields = (names) => {
@@ -249,33 +247,33 @@ export default (schemas, methods) => FormComponent => (
       names.forEach((name) => {
         delete fields[name];
       });
-      // 更新
+      // Update
       this.setState({
         fields,
       });
     };
 
     /**
-     * 通过 names 验证组件
+     * Validate the component through names
      * @param names
      * @return {Boolean}
      */
     validateByNames = (...names) => {
       const result = this.validateFieldsByNames(...names);
       const { fields } = this.state;
-      // 更新
+      // Update
       this.setState({
         fields,
       });
       return result;
     };
 
-    // 验证所有
+    // Validate all
     validate = () => {
       // 验证
       const result = this.validateFieldsAll();
       const { fields } = this.state;
-      // 更新
+      // Update
       this.setState({
         fields,
       });
