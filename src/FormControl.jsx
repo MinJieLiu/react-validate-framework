@@ -194,6 +194,8 @@ export default (schemas, methods) => FormComponent => (
       // 验证
       this.validateField(name, theValue);
 
+      // 同步 values 外部状态
+      this.props.values[name] = theValue;
       // 更新
       this.setState({
         fields,
