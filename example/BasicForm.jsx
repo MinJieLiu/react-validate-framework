@@ -83,10 +83,8 @@ class BasicForm extends Component {
   handleSubmitClick = () => {
     const { validate } = this.props;
     // 验证本组件
-    const isValidate = validate();
-    this.setState({
-      isValidate,
-    });
+    // @return {Boolean}
+    validate();
   };
 
   render() {

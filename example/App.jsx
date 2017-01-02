@@ -27,7 +27,7 @@ export default class extends Component {
   handleValidateBasicForm = () => {
     const basicForm = this.basicForm;
     // 验证
-    const isAllValid = basicForm.handleValidate();
+    const isAllValid = basicForm.validate();
     let { formValues } = this.state;
     if (isAllValid) {
       // 获取表单值

@@ -90,6 +90,15 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
+     * 获取整体验证状态
+     * @return {Boolean}
+     */
+    get isAllValid() {
+      const { fields } = this.state;
+      return Object.keys(schemas).every(name => fields[name].result);
+    }
+
+    /**
      * 组装数据
      * 此方法不 setState
      * @param name
@@ -136,7 +145,7 @@ export default (schemas, methods) => FormComponent => (
      * @param names
      * @return {Boolean}
      */
-    validateByNames(...names) {
+    validateFieldsByNames(...names) {
       const { fields } = this.state;
       let isValid = true;
       names.forEach((name) => {
@@ -153,9 +162,9 @@ export default (schemas, methods) => FormComponent => (
      * 验证所有域
      * @return {Boolean}
      */
-    validateAllFields() {
+    validateFieldsAll() {
       const names = Object.keys(schemas);
-      return this.validateByNames(...names);
+      return this.validateFieldsByNames(...names);
     }
 
     // 表单改变事件监听
@@ -172,7 +181,7 @@ export default (schemas, methods) => FormComponent => (
       // checkbox 处理
       if (type === 'checkbox') {
         theValue = fields[name].value.slice();
-        const index = theValue.findIndex(item => item === value);
+        const index = theValue.indexOf(value);
         if (index === -1) {
           theValue.push(value);
         } else {
@@ -195,7 +204,7 @@ export default (schemas, methods) => FormComponent => (
      * 添加一条或多条验证规则
      * @param schema
      */
-    handleAddSchemas = (schema) => {
+    addSchemas = (schema) => {
       Object.assign(schemas, schema);
     };
 
@@ -203,7 +212,7 @@ export default (schemas, methods) => FormComponent => (
      * 删除一条或多条验证规则
      * @param names
      */
-    handleRemoveSchemas = (names) => {
+    removeSchemas = (names) => {
       names.forEach((name) => {
         delete schemas[name]; // eslint-disable-line no-param-reassign
       });
@@ -213,7 +222,7 @@ export default (schemas, methods) => FormComponent => (
      * 添加一条或多条域
      * @param newFields
      */
-    handleAddFields = (newFields) => {
+    addFields = (newFields) => {
       const { classNames } = this.props;
       const { fields } = this.state;
       Object.keys(newFields).forEach((name) => {
@@ -233,7 +242,7 @@ export default (schemas, methods) => FormComponent => (
      * 删除一条或多条域
      * @param names
      */
-    handleRemoveFields = (names) => {
+    removeFields = (names) => {
       const { fields } = this.state;
       names.forEach((name) => {
         delete fields[name];
@@ -249,8 +258,8 @@ export default (schemas, methods) => FormComponent => (
      * @param names
      * @return {Boolean}
      */
-    handleValidateByNames = (...names) => {
-      const result = this.validateByNames(...names);
+    validateByNames = (...names) => {
+      const result = this.validateFieldsByNames(...names);
       const { fields } = this.state;
       // 更新
       this.setState({
@@ -260,34 +269,33 @@ export default (schemas, methods) => FormComponent => (
     };
 
     // 验证所有
-    handleValidate = () => {
+    validate = () => {
       // 验证
-      const isAllValid = this.validateAllFields();
+      const result = this.validateFieldsAll();
       const { fields } = this.state;
       // 更新
       this.setState({
         fields,
-        isAllValid,
       });
-      return isAllValid;
+      return result;
     };
 
     render() {
-      const { fields, isAllValid } = this.state;
+      const { fields } = this.state;
 
       return (
         <FormComponent
           {...this.props}
           fields={fields}
-          isAllValid={isAllValid}
+          isAllValid={this.isAllValid}
           formValues={this.formValues}
           onChange={this.handleChange}
-          validate={this.handleValidate}
-          validateByNames={this.handleValidateByNames}
-          addFields={this.handleAddFields}
-          removeFields={this.handleRemoveFields}
-          addSchemas={this.handleAddSchemas}
-          removeSchemas={this.handleRemoveSchemas}
+          validate={this.validate}
+          validateByNames={this.validateByNames}
+          addFields={this.addFields}
+          removeFields={this.removeFields}
+          addSchemas={this.addSchemas}
+          removeSchemas={this.removeSchemas}
         />
       );
     }
