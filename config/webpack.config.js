@@ -2,15 +2,20 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
+const isDebug = process.env.NODE_ENV === 'development';
+
 export default {
   devtool: 'source-map',
   entry: [
-    'webpack/hot/dev-server',
-    'webpack-hot-middleware/client',
+    ...isDebug
+      ? [
+        'webpack/hot/dev-server',
+        'webpack-hot-middleware/client',
+      ] : [],
     path.resolve('./example/index'),
   ],
   output: {
-    path: path.join(__dirname, '/static'),
+    path: path.join(__dirname, '../build'),
     filename: 'bundle.js',
   },
   module: {
@@ -36,7 +41,12 @@ export default {
     ],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    ...isDebug
+      ? [
+        new webpack.HotModuleReplacementPlugin(),
+      ] : [
+        new webpack.optimize.UglifyJsPlugin(),
+      ],
     new HtmlWebpackPlugin({
       template: path.resolve('./example/index.html'),
     }),
