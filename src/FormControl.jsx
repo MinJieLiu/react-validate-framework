@@ -202,6 +202,22 @@ export default (schemas, methods) => FormComponent => (
     };
 
     /**
+     * Customize to change the field
+     * @param field
+     */
+    changeField = (field) => {
+      const { name, value } = field;
+      const { fields } = this.state;
+      Object.assign(fields[name], {
+        value,
+      });
+      // Update
+      this.setState({
+        fields,
+      });
+    };
+
+    /**
      * Add one or more validation rules
      * @param schema
      */
@@ -297,6 +313,7 @@ export default (schemas, methods) => FormComponent => (
           isAllValid={this.isAllValid}
           formValues={this.formValues}
           onChange={this.handleChange}
+          changeField={this.changeField}
           validate={this.validate}
           validateByNames={this.validateByNames}
           addFields={this.addFields}
