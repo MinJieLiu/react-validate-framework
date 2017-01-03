@@ -11,6 +11,8 @@ A lightweight and extensible React validation component
 
 This component relies on `react`.
 
+Demo: [https://minjieliu.github.io/react-validate-framework](https://minjieliu.github.io/react-validate-framework)
+
 You can check out the code to see examples.
 
 > BasicForm.jsx

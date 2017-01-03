@@ -45,7 +45,16 @@ export default {
       ? [
         new webpack.HotModuleReplacementPlugin(),
       ] : [
-        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.DefinePlugin({
+          'process.env': {
+            NODE_ENV: JSON.stringify('production'),
+          },
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+          compressor: {
+            warnings: false,
+          },
+        }),
       ],
     new HtmlWebpackPlugin({
       template: path.resolve('./example/index.html'),

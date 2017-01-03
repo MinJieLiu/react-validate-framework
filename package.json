@@ -1,14 +1,13 @@
 {
   "name": "react-validate-framework",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "React validation framework.",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf lib",
     "lint": "eslint src config --fix",
     "start": "better-npm-run start",
-    "build:example": "better-npm-run build:example",
-    "deploy": "npm run clean && better-npm-run prod"
+    "build:example": "rimraf build && better-npm-run build:example",
+    "deploy": "rimraf lib && better-npm-run prod"
   },
   "betterScripts": {
     "start": {
