@@ -19,7 +19,7 @@ You can check out the code to see examples.
 
 ```js
 import React, { Component, PropTypes } from 'react';
-import FormControl from 'react-validate-framework';
+import formConnect from 'react-validate-framework';
 
 // Rules and messages
 const schemas = {
@@ -150,6 +150,8 @@ class BasicForm extends Component {
     );
   }
 }
+
+export default formConnect(schemas, methods)(BasicForm);
 
 ```
 
