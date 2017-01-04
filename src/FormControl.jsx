@@ -77,6 +77,14 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
+     * Get the fields object
+     * @returns {Object}
+     */
+    get fields() {
+      return this.state.fields;
+    }
+
+    /**
      * Gets a list of form values
      * @return {Object}
      */
@@ -304,12 +312,10 @@ export default (schemas, methods) => FormComponent => (
     };
 
     render() {
-      const { fields } = this.state;
-
       return (
         <FormComponent
           {...this.props}
-          fields={fields}
+          fields={this.fields}
           isAllValid={this.isAllValid}
           formValues={this.formValues}
           onChange={this.handleChange}
