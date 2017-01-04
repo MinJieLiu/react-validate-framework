@@ -211,13 +211,18 @@ export default (schemas, methods) => FormComponent => (
 
     /**
      * Customize to change the field
-     * @param field
+     * @param newFields
      */
-    changeField = (field) => {
-      const { name, value } = field;
+    operateChange = (...newFields) => {
       const { fields } = this.state;
-      Object.assign(fields[name], {
-        value,
+      newFields.forEach((item) => {
+        const { name, value } = item;
+        Object.assign(fields[name], {
+          value,
+        });
+        // Synchronize values external state
+        this.props.values[name] = value;
+        this.validateField(name, value);
       });
       // Update
       this.setState({
@@ -319,7 +324,7 @@ export default (schemas, methods) => FormComponent => (
           isAllValid={this.isAllValid}
           formValues={this.formValues}
           onChange={this.handleChange}
-          changeField={this.changeField}
+          operateChange={this.operateChange}
           validate={this.validate}
           validateByNames={this.validateByNames}
           addFields={this.addFields}

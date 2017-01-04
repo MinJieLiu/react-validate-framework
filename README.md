@@ -207,7 +207,7 @@ export default class extends Component {
 | isAllValid | Boolean | | Gets the global validation status |
 | formValues | Object | | Gets a list of form values |
 | onChange | function | | Form change event listener |
-| changeField | function | | Customize to change the field |
+| operateChange | function | | Customize to change the field |
 | validate | function | | Validate all fields |
 | validateByNames | function | | Validate the component through names |
 | addFields | function | | Add one or more fields |
