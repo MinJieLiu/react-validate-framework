@@ -18,6 +18,11 @@ export default (schemas, methods) => FormComponent => (
    */
   class FormControl extends Component {
 
+    static childContextTypes = {
+      fields: PropTypes.object.isRequired,
+      handleChange: PropTypes.func.isRequired,
+    };
+
     static propTypes = {
       values: PropTypes.object.isRequired,
       classNames: PropTypes.object,
@@ -46,6 +51,13 @@ export default (schemas, methods) => FormComponent => (
 
       // Initializes the validation component and customizes the validation method
       this.validator = new Validator().addMethods(methods);
+    }
+
+    getChildContext() {
+      return {
+        fields: this.state.fields,
+        handleChange: this.handleChange,
+      };
     }
 
     componentWillReceiveProps(nextProps) {

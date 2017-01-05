@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
-import FormControl from '../src';
+import formConnect from '../src';
 import './BasicForm.scss';
 import ChildForm from './ChildForm';
 
@@ -190,7 +190,7 @@ class BasicForm extends Component {
                 name="hobby"
                 type="checkbox"
                 onChange={onChange}
-                checked={fields.hobby.value.includes('1')}
+                checked={fields.hobby.value.indexOf('1') !== -1}
                 value="1"
               />
               hobby1
@@ -201,7 +201,7 @@ class BasicForm extends Component {
                 name="hobby"
                 type="checkbox"
                 onChange={onChange}
-                checked={fields.hobby.value.includes('2')}
+                checked={fields.hobby.value.indexOf('2') !== -1}
                 value="2"
               />
               hobby2
@@ -212,7 +212,7 @@ class BasicForm extends Component {
                 name="hobby"
                 type="checkbox"
                 onChange={onChange}
-                checked={fields.hobby.value.includes('3')}
+                checked={fields.hobby.value.indexOf('3') !== -1}
                 value="3"
               />
               hobby3
@@ -223,7 +223,7 @@ class BasicForm extends Component {
                 name="hobby"
                 type="checkbox"
                 onChange={onChange}
-                checked={fields.hobby.value.includes('4')}
+                checked={fields.hobby.value.indexOf('4')}
                 value="4"
               />
               hobby4
@@ -264,4 +264,4 @@ class BasicForm extends Component {
   }
 }
 
-export default FormControl(schemas, methods)(BasicForm);
+export default formConnect(schemas, methods)(BasicForm);
