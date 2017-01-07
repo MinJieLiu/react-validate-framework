@@ -1,5 +1,5 @@
 /**
- * Input component
+ * Field component
  */
 
 import React, { PropTypes } from 'react';
@@ -8,24 +8,21 @@ const propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-/**
- * Return input component
- * @param name
- * @param props
- * @param fields
- * @param handleChange
- * @constructor
- */
-const Field = ({ name, ...props }, { fields, handleChange }) => InputComponent => (
-  <InputComponent
-    className={fields[name].className}
+const contextTypes = {
+  fields: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+};
+
+const Field = (FormComponent, { name, ...props }, { fields, handleChange }) => (
+  <FormComponent
     name={name}
-    value={fields[name].value}
+    field={fields[name]}
     onChange={handleChange}
     {...props}
   />
 );
 
 Field.propTypes = propTypes;
+Field.contextTypes = contextTypes;
 
 export default Field;
