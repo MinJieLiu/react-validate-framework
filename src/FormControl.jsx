@@ -50,7 +50,10 @@ export default (schemas, methods) => FormComponent => (
       };
 
       // Initializes the validation component and customizes the validation method
-      this.validator = new Validator().addMethods(methods);
+      this.validator = new Validator();
+      Object.assign(this.validator, methods, {
+        fields,
+      });
     }
 
     getChildContext() {

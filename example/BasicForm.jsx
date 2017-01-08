@@ -26,8 +26,8 @@ const schemas = {
     messages: 'Mobile: {{value}} is not valid.',
   },
   birthday: {
-    rules: 'required | isDate',
-    messages: 'Can not be empty! | Please enter a valid date.',
+    rules: 'requiredField(phone) | isDate',
+    messages: 'Phone and birthday at least one entry! | Please enter a valid date.',
   },
   sex: {
     rules: 'required',
@@ -57,6 +57,11 @@ const schemas = {
 
 // Custom methods
 const methods = {
+  // Rely on other fields
+  requiredField(field, param) {
+    const otherField = this.fields[param];
+    return this.required(field) || (otherField.result && this.required(otherField));
+  },
   selectLimit(field, param) {
     if (Array.isArray(field.value)) {
       return field.value.length >= param;

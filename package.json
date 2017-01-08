@@ -1,6 +1,6 @@
 {
   "name": "react-validate-framework",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "React validation framework.",
   "main": "index.js",
   "scripts": {
@@ -49,7 +49,7 @@
   },
   "homepage": "https://github.com/MinJieLiu/react-validate-framework#readme",
   "dependencies": {
-    "validate-framework-utils": "0.2.7"
+    "validate-framework-utils": "0.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
