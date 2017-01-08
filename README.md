@@ -66,15 +66,42 @@ const BasicForm = () => (
 );
 ```
 
-Finally, export the module:
+Export the module:
 
 ```js
 export default formConnect(schemas, methods)(BasicForm);
 ```
 
+Finally, sets the initialized value
+
+```js
+<BasicForm
+  ref={(ref) => {
+    this.basicForm = ref;
+  }}
+  classNames={{
+    static: 'form-control',
+    success: 'valid-success',
+    error: 'valid-error',
+  }}
+  values={this.state.formValues}
+/>
+
+// The formValues like this { email: '', hobby: ['2'] },
+```
+
 The `name` attribute is required in all input components
 
 Validate methods can refer to `validate-framework-utils`
+
+### Form components
+
+ * `Checkbox`
+ * `Radio`
+ * `Select`
+ * `Text`
+ * `Textarea`
+ * `Message`
 
 ### API
 
