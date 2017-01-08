@@ -321,7 +321,6 @@ export default (schemas, methods) => FormComponent => (
 
     // Validate all
     validate = () => {
-      // 验证
       const result = this.validateFieldsAll();
       const { fields } = this.state;
       // Update
