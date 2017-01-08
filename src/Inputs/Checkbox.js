@@ -4,8 +4,8 @@ import Field from '../Field';
 export default Object.assign(Field.bind(null, ({ field, value, ...props }) => (
   <input
     {...props}
-    checked={field.value.indexOf(value) !== -1}
-    value={value}
     type="checkbox"
+    value={value}
+    checked={field.value.indexOf(value) !== -1}
   />
 )), Field);
