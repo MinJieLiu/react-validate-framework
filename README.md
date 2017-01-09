@@ -72,7 +72,7 @@ Export the module:
 export default formConnect(schemas, methods)(BasicForm);
 ```
 
-Finally, sets the initialized value
+Finally, sets the initialized value:
 
 ```js
 <BasicForm
@@ -87,12 +87,10 @@ Finally, sets the initialized value
   values={this.state.formValues}
 />
 
-// The formValues like this { email: '', hobby: ['2'] },
+// The values like this { email: '', hobby: ['2'] }
 ```
 
-The `name` attribute is required in all input components
-
-Validate methods can refer to `validate-framework-utils`
+Validate methods can refer to [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
 ### Form components
 
@@ -103,13 +101,35 @@ Validate methods can refer to `validate-framework-utils`
  * `Textarea`
  * `Message`
 
+The `name` attribute is required in form components, Other parameters can be overridden.
+
+Of course, you can also use unencapsulated form components, just specify `value` and` onChange` on the line:
+
+```js
+const {
+  fields,
+  onChange,
+} = this.props;
+
+return (
+  <input
+    className={fields.email.className}
+    name="email"
+    type="text"
+    onChange={onChange}
+    value={fields.email.value}
+    placeholder="Please input your email"
+  />
+);
+```
+
 ### API
 
 #### FormControl params
 
 | name | type | required | default | description |
 | :--- | :--- | :--- | :--- | :--- |
-| values | Object | true | | Key-value pairs for `name` and` value` |
+| values | Object | false | {} | Key-value pairs for `name` and` value` |
 | classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
 
 #### Form params
@@ -119,11 +139,16 @@ Validate methods can refer to `validate-framework-utils`
 | fields | Object | | The collection of fields |
 | isAllValid | Boolean | | Gets the global validation status |
 | formValues | Object | | Gets a list of form values |
+| initValues | function | | Initializes the form value |
 | onChange | function | | Form change event listener |
-| operateChange | function | | Customize to change the field |
+| changeValues | function | | Customize to change the values |
 | validate | function | | Validate all fields |
 | validateByNames | function | | Validate the component through names |
 | addFields | function | | Add one or more fields |
 | removeFields | function | | Deletes one or more fields |
 | addSchemas | function | | Add one or more validation rules |
 | removeSchemas | function | | Delete one or more validation rules |
+
+You can either pass in `values` as an argument, or call the `initValues` method when the form is initialized.
+
+You can invoke the `changeValues` method to simulate a form change event.

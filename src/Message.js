@@ -1,7 +1,3 @@
-/**
- * Error message component
- */
-
 import React, { PropTypes } from 'react';
 
 const propTypes = {
@@ -13,6 +9,14 @@ const contextTypes = {
   fields: PropTypes.object.isRequired,
 };
 
+/**
+ * Error message component
+ * @param name
+ * @param htmlFor
+ * @param props
+ * @param fields
+ * @constructor
+ */
 const Message = ({ name, htmlFor, ...props }, { fields }) => (
   <label
     htmlFor={htmlFor}

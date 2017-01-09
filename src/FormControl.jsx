@@ -24,11 +24,12 @@ export default (schemas, methods) => FormComponent => (
     };
 
     static propTypes = {
-      values: PropTypes.object.isRequired,
+      values: PropTypes.object,
       classNames: PropTypes.object,
     };
 
     static defaultProps = {
+      values: {},
       classNames: {},
     };
 
@@ -189,6 +190,21 @@ export default (schemas, methods) => FormComponent => (
       return this.validateFieldsByNames(...names);
     }
 
+    /**
+     * Initializes the form value
+     * @param values
+     */
+    initValues = (values) => {
+      const { classNames } = this.props;
+      const { fields } = this.state;
+      Object.keys(values).forEach((name) => {
+        fields[name] = {
+          className: classNames.static,
+          value: values[name],
+        };
+      });
+    };
+
     // Form change event listener
     handleChange = (e) => {
       const { name, type, value } = e.target;
@@ -225,13 +241,13 @@ export default (schemas, methods) => FormComponent => (
     };
 
     /**
-     * Customize to change the field
-     * @param newFields
+     * Customize to change the values
+     * @param values
      */
-    operateChange = (...newFields) => {
+    changeValues = (values) => {
       const { fields } = this.state;
-      newFields.forEach((item) => {
-        const { name, value } = item;
+      Object.keys(values).forEach((name) => {
+        const value = values[name];
         Object.assign(fields[name], {
           value,
         });
@@ -337,8 +353,9 @@ export default (schemas, methods) => FormComponent => (
           fields={this.fields}
           isAllValid={this.isAllValid}
           formValues={this.formValues}
+          initValues={this.initValues}
           onChange={this.handleChange}
-          operateChange={this.operateChange}
+          changeValues={this.changeValues}
           validate={this.validate}
           validateByNames={this.validateByNames}
           addFields={this.addFields}

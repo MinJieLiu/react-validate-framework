@@ -1,7 +1,3 @@
-/**
- * Field component
- */
-
 import React, { PropTypes } from 'react';
 
 const propTypes = {
@@ -13,6 +9,15 @@ const contextTypes = {
   handleChange: PropTypes.func.isRequired,
 };
 
+/**
+ * Field component
+ * @param FormComponent
+ * @param name
+ * @param props
+ * @param fields
+ * @param handleChange
+ * @constructor
+ */
 const Field = (FormComponent, { name, ...props }, { fields, handleChange }) => (
   <FormComponent
     name={name}
