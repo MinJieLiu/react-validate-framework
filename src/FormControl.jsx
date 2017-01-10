@@ -199,10 +199,11 @@ export default (schemas, methods) => FormComponent => (
 
     /**
      * Initializes the classNames
-     * @param classNames
+     * @param initClassNames
      */
-    initClassNames = (classNames) => {
-      this.props.classNames = classNames;
+    initClassNames = (initClassNames) => {
+      const { classNames } = this.props;
+      Object.assign(classNames, initClassNames);
     };
 
     // Form change event listener
