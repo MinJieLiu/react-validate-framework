@@ -119,7 +119,8 @@ export default (schemas, methods) => FormComponent => (
      */
     get isAllValid() {
       const { fields } = this.state;
-      return Object.keys(schemas).every(name => fields[name].result);
+      return Object.keys(schemas)
+        .every(name => fields[name] && fields[name].result);
     }
 
     /**
