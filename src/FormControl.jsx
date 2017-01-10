@@ -183,15 +183,6 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
-     * Validate all fields
-     * @return {Boolean}
-     */
-    validateFieldsAll() {
-      const names = Object.keys(schemas);
-      return this.validateFieldsByNames(...names);
-    }
-
-    /**
      * Initializes the form value
      * @param values
      */
@@ -204,6 +195,14 @@ export default (schemas, methods) => FormComponent => (
           value: values[name],
         };
       });
+    };
+
+    /**
+     * Initializes the classNames
+     * @param classNames
+     */
+    initClassNames = (classNames) => {
+      this.props.classNames = classNames;
     };
 
     // Form change event listener
@@ -247,11 +246,10 @@ export default (schemas, methods) => FormComponent => (
      */
     changeValues = (values) => {
       const { fields } = this.state;
+      // Initializes
+      this.initValues(values);
       Object.keys(values).forEach((name) => {
         const value = values[name];
-        Object.assign(fields[name], {
-          value,
-        });
         // Synchronize values external state
         this.props.values[name] = value;
         this.validateField(name, value);
@@ -338,7 +336,8 @@ export default (schemas, methods) => FormComponent => (
 
     // Validate all
     validate = () => {
-      const result = this.validateFieldsAll();
+      const names = Object.keys(schemas);
+      const result = this.validateFieldsByNames(...names);
       const { fields } = this.state;
       // Update
       this.setState({
@@ -355,6 +354,7 @@ export default (schemas, methods) => FormComponent => (
           isAllValid={this.isAllValid}
           formValues={this.formValues}
           initValues={this.initValues}
+          initClassNames={this.initClassNames}
           onChange={this.handleChange}
           changeValues={this.changeValues}
           validate={this.validate}

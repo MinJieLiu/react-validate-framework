@@ -134,20 +134,21 @@ return (
 
 #### Form params
 
-| name | type | default | description |
-| :--- | :--- | :--- | :--- |
-| fields | Object | | The collection of fields |
-| isAllValid | Boolean | | Gets the global validation status |
-| formValues | Object | | Gets a list of form values |
-| initValues | function | | Initializes the form value |
-| onChange | function | | Form change event listener |
-| changeValues | function | | Customize to change the values |
-| validate | function | | Validate all fields |
-| validateByNames | function | | Validate the component through names |
-| addFields | function | | Add one or more fields |
-| removeFields | function | | Deletes one or more fields |
-| addSchemas | function | | Add one or more validation rules |
-| removeSchemas | function | | Delete one or more validation rules |
+| name | type | default | setState | description |
+| :--- | :--- | :--- | :--- | :--- |
+| fields | Object | | | The collection of fields |
+| isAllValid | Boolean | | | Gets the global validation status |
+| formValues | Object | | | Gets a list of form values |
+| initValues | function | | false | Initializes the form value |
+| initClassNames | function | | false | Initializes the classNames |
+| onChange | function | | true | Form change event listener |
+| changeValues | function | | true | Customize to change the values |
+| validate | function | | true | Validate all fields |
+| validateByNames | function | | true | Validate the component through names |
+| addFields | function | | true | Add one or more fields |
+| removeFields | function | | true | Deletes one or more fields |
+| addSchemas | function | | false | Add one or more validation rules |
+| removeSchemas | function | | true | Delete one or more validation rules |
 
 You can either pass in `values` as an argument, or call the `initValues` method when the form is initialized.
 
