@@ -35,15 +35,13 @@ export default (schemas, methods) => FormComponent => (
 
     constructor(props) {
       super(props);
-      // Initializes classNames
-      this.classNames = props.classNames;
+      const { classNames, values } = props;
 
       // Assemble the initialization data into fields
-      const { values } = props;
       const fields = {};
       Object.keys(values).forEach((name) => {
         fields[name] = {
-          className: this.classNames.static,
+          className: classNames.static,
           value: values[name],
         };
       });
@@ -69,6 +67,7 @@ export default (schemas, methods) => FormComponent => (
     componentWillReceiveProps(nextProps) {
       // Updates the state from the parent component
       const { values } = nextProps;
+      const { classNames } = this.props;
       const { fields } = this.state;
 
       Object.keys(values).forEach((name) => {
@@ -82,7 +81,7 @@ export default (schemas, methods) => FormComponent => (
         } else {
           // Add a new field
           fields[name] = {
-            className: this.classNames.static,
+            className: classNames.static,
             value: newValue,
           };
         }
@@ -131,7 +130,7 @@ export default (schemas, methods) => FormComponent => (
      * @param value
      */
     assembleFieldValidate(name, value) {
-      const classNames = this.classNames;
+      const { classNames } = this.props;
       const { fields } = this.state;
       // No schema is not to validate
       const schema = schemas[name] && Object.assign(schemas[name], { value });
@@ -188,10 +187,11 @@ export default (schemas, methods) => FormComponent => (
      * @param values
      */
     initValues = (values) => {
+      const { classNames } = this.props;
       const { fields } = this.state;
       Object.keys(values).forEach((name) => {
         fields[name] = {
-          className: this.classNames.static,
+          className: classNames.static,
           value: values[name],
         };
       });
@@ -202,7 +202,7 @@ export default (schemas, methods) => FormComponent => (
      * @param classNames
      */
     initClassNames = (classNames) => {
-      Object.assign(this.classNames, classNames);
+      Object.assign(this.props.classNames, classNames);
     };
 
     // Form change event listener
@@ -290,10 +290,11 @@ export default (schemas, methods) => FormComponent => (
      * @param newFields
      */
     addFields = (newFields) => {
+      const { classNames } = this.props;
       const { fields } = this.state;
       Object.keys(newFields).forEach((name) => {
         Object.assign(newFields[name], {
-          className: this.classNames.static,
+          className: classNames.static,
         });
       });
       Object.assign(fields, newFields);
