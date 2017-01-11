@@ -129,7 +129,7 @@ return (
 
 | name | type | required | default | description |
 | :--- | :--- | :--- | :--- | :--- |
-| values | Object | false | {} | Key-value pairs for `name` and` value` |
+| values | Object | false | | Key-value pairs for `name` and` value` |
 | classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
 
 #### Form params

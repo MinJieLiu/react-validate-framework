@@ -29,22 +29,26 @@ export default (schemas, methods) => FormComponent => (
     };
 
     static defaultProps = {
-      values: {},
       classNames: {},
     };
 
     constructor(props) {
       super(props);
-      const { classNames, values } = props;
+      const {
+        classNames,
+        values,
+      } = props;
 
-      // Assemble the initialization data into fields
       const fields = {};
-      Object.keys(values).forEach((name) => {
-        fields[name] = {
-          className: classNames.static,
-          value: values[name],
-        };
-      });
+      // Assemble the initialization data into fields
+      if (values) {
+        Object.keys(values).forEach((name) => {
+          fields[name] = {
+            className: classNames.static,
+            value: values[name],
+          };
+        });
+      }
 
       this.state = {
         fields,
@@ -65,8 +69,12 @@ export default (schemas, methods) => FormComponent => (
     }
 
     componentWillReceiveProps(nextProps) {
-      // Updates the state from the parent component
       const { values } = nextProps;
+      // No value
+      if (!values) {
+        return;
+      }
+      // Updates the state from the parent component
       const { classNames } = this.props;
       const { fields } = this.state;
 
@@ -228,12 +236,12 @@ export default (schemas, methods) => FormComponent => (
       } else {
         theValue = value;
       }
-
+      // Synchronize values external state
+      if (this.props.values) {
+        this.props.values[name] = theValue;
+      }
       // Validate
       this.validateField(name, theValue);
-
-      // Synchronize values external state
-      this.props.values[name] = theValue;
       // Update
       this.setState({
         fields,
@@ -251,7 +259,9 @@ export default (schemas, methods) => FormComponent => (
       Object.keys(values).forEach((name) => {
         const value = values[name];
         // Synchronize values external state
-        this.props.values[name] = value;
+        if (this.props.values) {
+          this.props.values[name] = value;
+        }
         this.validateField(name, value);
       });
       // Update
