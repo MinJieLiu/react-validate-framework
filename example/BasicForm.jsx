@@ -73,7 +73,7 @@ const methods = {
 class BasicForm extends Component {
 
   static propTypes = {
-    formValues: PropTypes.object,
+    getFormValues: PropTypes.func,
     isAllValid: PropTypes.bool,
     validate: PropTypes.func,
     removeSchemas: PropTypes.func,
@@ -87,7 +87,7 @@ class BasicForm extends Component {
 
   render() {
     const {
-      formValues,
+      getFormValues,
       isAllValid,
       removeSchemas,
     } = this.props;
@@ -230,7 +230,7 @@ class BasicForm extends Component {
         />
         <div className="well-sm">
           <p>Form Values:</p>
-          {JSON.stringify(formValues)}
+          {JSON.stringify(getFormValues())}
         </div>
       </div>
     );

@@ -31,7 +31,7 @@ export default class extends Component {
     let { formValues } = this.state;
     if (isAllValid) {
       // Get form values
-      formValues = basicForm.formValues;
+      formValues = basicForm.getFormValues();
     }
     this.setState({
       isAllValid,
