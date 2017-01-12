@@ -109,19 +109,6 @@ export default (schemas, methods) => FormComponent => (
     }
 
     /**
-     * Gets a list of form values
-     * @return {Object}
-     */
-    get formValues() {
-      const { fields } = this.state;
-      const values = {};
-      Object.keys(fields).forEach((name) => {
-        values[name] = fields[name].value;
-      });
-      return values;
-    }
-
-    /**
      * Gets the global validation status
      * @return {Boolean}
      */
@@ -211,6 +198,19 @@ export default (schemas, methods) => FormComponent => (
      */
     initClassNames = (classNames) => {
       Object.assign(this.props.classNames, classNames);
+    };
+
+    /**
+     * Gets a list of form values
+     * @return {Object}
+     */
+    getFormValues = () => {
+      const { fields } = this.state;
+      const values = {};
+      Object.keys(fields).forEach((name) => {
+        values[name] = fields[name].value;
+      });
+      return values;
     };
 
     // Form change event listener
@@ -362,9 +362,9 @@ export default (schemas, methods) => FormComponent => (
           {...this.props}
           fields={this.fields}
           isAllValid={this.isAllValid}
-          formValues={this.formValues}
           initValues={this.initValues}
           initClassNames={this.initClassNames}
+          getFormValues={this.getFormValues}
           onChange={this.handleChange}
           changeValues={this.changeValues}
           validate={this.validate}

@@ -138,7 +138,7 @@ return (
 | :--- | :--- | :--- | :--- | :--- |
 | fields | Object | | | The collection of fields |
 | isAllValid | Boolean | | | Gets the global validation status |
-| formValues | Object | | | Gets a list of form values |
+| getFormValues | function | | | Gets a list of form values |
 | initValues | function | | false | Initializes the form value |
 | initClassNames | function | | false | Initializes the classNames |
 | onChange | function | | true | Form change event listener |
