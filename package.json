@@ -1,8 +1,8 @@
 {
   "name": "react-validate-framework",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "React validation framework.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src config --fix",
     "start": "better-npm-run start",

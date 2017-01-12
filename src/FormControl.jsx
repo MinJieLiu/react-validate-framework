@@ -200,19 +200,6 @@ export default (schemas, methods) => FormComponent => (
       Object.assign(this.props.classNames, classNames);
     };
 
-    /**
-     * Gets a list of form values
-     * @return {Object}
-     */
-    getFormValues = () => {
-      const { fields } = this.state;
-      const values = {};
-      Object.keys(fields).forEach((name) => {
-        values[name] = fields[name].value;
-      });
-      return values;
-    };
-
     // Form change event listener
     handleChange = (e) => {
       const { name, type, value } = e.target;
@@ -268,6 +255,19 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
+    };
+
+    /**
+     * Gets a list of form values
+     * @return {Object}
+     */
+    getFormValues = () => {
+      const { fields } = this.state;
+      const values = {};
+      Object.keys(fields).forEach((name) => {
+        values[name] = fields[name].value;
+      });
+      return values;
     };
 
     /**
@@ -364,9 +364,9 @@ export default (schemas, methods) => FormComponent => (
           isAllValid={this.isAllValid}
           initValues={this.initValues}
           initClassNames={this.initClassNames}
-          getFormValues={this.getFormValues}
           onChange={this.handleChange}
           changeValues={this.changeValues}
+          getFormValues={this.getFormValues}
           validate={this.validate}
           validateByNames={this.validateByNames}
           addFields={this.addFields}
