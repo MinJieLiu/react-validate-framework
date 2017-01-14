@@ -11,7 +11,7 @@ import Validator from 'validate-framework-utils';
  * @param methods Extended Validation Method
  * @return Component
  */
-export default (schemas, methods) => FormComponent => (
+export default (schemas = {}, methods) => FormComponent => (
 
   /**
    * Returns a react form
