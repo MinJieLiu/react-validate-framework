@@ -42,8 +42,8 @@ class ChildForm extends Component {
 
   handleDeleteFriend = () => {
     const { formControl: { removeSchemas, removeFields } } = this.props;
-    removeSchemas(['friend']);
-    removeFields(['friend']);
+    removeSchemas('friend');
+    removeFields('friend');
   };
 
   render() {

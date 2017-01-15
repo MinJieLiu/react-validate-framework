@@ -251,7 +251,7 @@ export default (schemas = {}, methods) => FormComponent => (
     changeValues = (values) => {
       const { fields } = this.state;
       // Initializes
-      this.initValues(values);
+      this.init(values);
       Object.keys(values).forEach((name) => {
         const value = values[name];
         // Synchronize values external state
