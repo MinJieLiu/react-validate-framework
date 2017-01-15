@@ -3,21 +3,29 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import {
+  Text,
+  Message,
+} from '../src';
 import './ChildForm.scss';
 
 class ChildForm extends Component {
 
   static propTypes = {
-    fields: PropTypes.object,
-    onChange: PropTypes.func,
-    addFields: PropTypes.func,
-    removeFields: PropTypes.func,
-    addSchemas: PropTypes.func,
-    removeSchemas: PropTypes.func,
+    formControl: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    // Initializes the values
+    props.formControl.init({
+      money: '',
+      url: '',
+    });
+  }
+
   handleAddFriends = () => {
-    const { addFields, addSchemas } = this.props;
+    const { formControl: { addFields, addSchemas } } = this.props;
     // init value
     addFields({
       friend: {
@@ -33,15 +41,17 @@ class ChildForm extends Component {
   };
 
   handleDeleteFriend = () => {
-    const { removeSchemas, removeFields } = this.props;
+    const { formControl: { removeSchemas, removeFields } } = this.props;
     removeSchemas(['friend']);
     removeFields(['friend']);
   };
 
   render() {
     const {
-      fields,
-      onChange,
+      formControl: {
+        fields,
+        onFormChange,
+      },
     } = this.props;
 
     return (
@@ -49,16 +59,13 @@ class ChildForm extends Component {
         <h3>ChildForm</h3>
         <div className="form-group">
           <label htmlFor="money">Money:</label>
-          <input
-            className={fields.money.className}
+          <Text
             id="money"
             name="money"
             type="text"
-            onChange={onChange}
-            value={fields.money.value}
             placeholder="Please enter money"
           />
-          <em className="valid-error-message">{fields.money.message}</em>
+          <Message className="valid-error-message" name="money" />
         </div>
         <div className="form-group">
           <button
@@ -73,27 +80,25 @@ class ChildForm extends Component {
             ? (
               <div className="form-group">
                 <label htmlFor="friend">Name:</label>
-                <input
-                  className={fields.friend.className}
+                <Text
                   id="friend"
                   name="friend"
                   type="text"
-                  onChange={onChange}
-                  value={fields.friend.value}
                   placeholder="Please enter a name"
                 />
-                <em className="valid-error-message">{fields.friend.message}</em>
+                <Message className="valid-error-message" name="friend" />
               </div>
             ) : null
         }
         <div className="form-group">
+          {/* The unencapsulated form components */}
           <label htmlFor="url">Url:</label>
           <input
             className={fields.url.className}
             id="url"
             name="url"
             type="text"
-            onChange={onChange}
+            onChange={onFormChange}
             value={fields.url.value}
             placeholder="Please enter a URL"
           />

@@ -73,23 +73,22 @@ const methods = {
 class BasicForm extends Component {
 
   static propTypes = {
-    getFormValues: PropTypes.func,
-    isAllValid: PropTypes.bool,
-    validate: PropTypes.func,
-    removeSchemas: PropTypes.func,
+    formControl: PropTypes.object,
   };
 
   handleSubmitClick = () => {
-    const { validate } = this.props;
+    const { formControl } = this.props;
     // @return {Boolean}
-    validate();
+    formControl.validate();
   };
 
   render() {
     const {
-      getFormValues,
-      isAllValid,
-      removeSchemas,
+      formControl: {
+        isAllValid,
+        formValues,
+        removeSchemas,
+      },
     } = this.props;
 
     return (
@@ -230,7 +229,7 @@ class BasicForm extends Component {
         />
         <div className="well-sm">
           <p>Form Values:</p>
-          {JSON.stringify(getFormValues())}
+          {JSON.stringify(formValues)}
         </div>
       </div>
     );

@@ -6,7 +6,7 @@ const propTypes = {
 
 const contextTypes = {
   fields: PropTypes.object.isRequired,
-  handleChange: PropTypes.func.isRequired,
+  onFormChange: PropTypes.func.isRequired,
 };
 
 /**
@@ -15,14 +15,14 @@ const contextTypes = {
  * @param name
  * @param props
  * @param fields
- * @param handleChange
+ * @param onFormChange
  * @constructor
  */
-const Field = (FormComponent, { name, ...props }, { fields, handleChange }) => (
+const Field = (FormComponent, { name, ...props }, { fields, onFormChange }) => (
   <FormComponent
     name={name}
     field={fields[name]}
-    onChange={handleChange}
+    onChange={onFormChange}
     {...props}
   />
 );

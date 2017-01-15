@@ -88,6 +88,7 @@ Finally, sets the initialized value:
 />
 
 // The values like this { email: '', hobby: ['2'] }
+// These props can be initialized in `BasicForm` use `init`
 ```
 
 Validate methods can refer to [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
@@ -138,10 +139,9 @@ return (
 | :--- | :--- | :--- | :--- | :--- |
 | fields | Object | | | The collection of fields |
 | isAllValid | Boolean | | | Gets the global validation status |
-| getFormValues | function | | | Gets a list of form values |
-| initValues | function | | false | Initializes the form value |
-| initClassNames | function | | false | Initializes the classNames |
-| onChange | function | | true | Form change event listener |
+| formValues | Object | | | Gets a list of form values |
+| init | function | | false | Initializes the form value and classes |
+| onFormChange | function | | true | Form change event listener |
 | changeValues | function | | true | Customize to change the values |
 | validate | function | | true | Validate all fields |
 | validateByNames | function | | true | Validate the component through names |
@@ -150,6 +150,6 @@ return (
 | addSchemas | function | | false | Add one or more validation rules |
 | removeSchemas | function | | true | Delete one or more validation rules |
 
-You can either pass in `values` as an argument, or call the `initValues` method when the form is initialized.
+You can either pass in `values` as an argument, or call the `init` method when the form is initialized.
 
 You can invoke the `changeValues` method to simulate a form change event.

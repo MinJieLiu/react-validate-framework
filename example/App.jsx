@@ -17,25 +17,15 @@ export default class extends Component {
       city: '',
       hobby: ['2'],
       remarks: '',
-      money: '',
-      url: '',
     },
     isAllValid: undefined,
   };
 
   // Validate the BasicForm
   handleValidateBasicForm = () => {
-    const basicForm = this.basicForm;
-    // 验证
-    const isAllValid = basicForm.validate();
-    let { formValues } = this.state;
-    if (isAllValid) {
-      // Get form values
-      formValues = basicForm.getFormValues();
-    }
+    const isAllValid = this.basicForm.validate();
     this.setState({
       isAllValid,
-      formValues,
     });
   };
 

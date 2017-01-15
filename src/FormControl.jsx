@@ -18,14 +18,14 @@ export default (schemas = {}, methods) => FormComponent => (
    */
   class FormControl extends Component {
 
-    static childContextTypes = {
-      fields: PropTypes.object.isRequired,
-      handleChange: PropTypes.func.isRequired,
-    };
-
     static propTypes = {
       values: PropTypes.object,
       classNames: PropTypes.object,
+    };
+
+    static childContextTypes = {
+      fields: PropTypes.object.isRequired,
+      onFormChange: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
@@ -64,7 +64,7 @@ export default (schemas = {}, methods) => FormComponent => (
     getChildContext() {
       return {
         fields: this.state.fields,
-        handleChange: this.handleChange,
+        onFormChange: this.onFormChange,
       };
     }
 
@@ -109,6 +109,19 @@ export default (schemas = {}, methods) => FormComponent => (
     }
 
     /**
+     * Gets a list of form values
+     * @return {Object}
+     */
+    get formValues() {
+      const { fields } = this.state;
+      const values = {};
+      Object.keys(fields).forEach((name) => {
+        values[name] = fields[name].value;
+      });
+      return values;
+    }
+
+    /**
      * Gets the global validation status
      * @return {Boolean}
      */
@@ -116,6 +129,25 @@ export default (schemas = {}, methods) => FormComponent => (
       const { fields } = this.state;
       return Object.keys(schemas)
         .every(name => fields[name] && fields[name].result);
+    }
+
+    /**
+     * Initializes the form value and classes
+     * @param values
+     * @param classes
+     */
+    init(values, classes) {
+      const { classNames } = this.props;
+      const { fields } = this.state;
+      // Merge
+      Object.assign(classNames, classes);
+      // Initialize
+      Object.keys(values).forEach((name) => {
+        fields[name] = {
+          className: classNames.static,
+          value: values[name],
+        };
+      });
     }
 
     /**
@@ -177,31 +209,8 @@ export default (schemas = {}, methods) => FormComponent => (
       return isValid;
     }
 
-    /**
-     * Initializes the form value
-     * @param values
-     */
-    initValues = (values) => {
-      const { classNames } = this.props;
-      const { fields } = this.state;
-      Object.keys(values).forEach((name) => {
-        fields[name] = {
-          className: classNames.static,
-          value: values[name],
-        };
-      });
-    };
-
-    /**
-     * Initializes the classNames
-     * @param classNames
-     */
-    initClassNames = (classNames) => {
-      Object.assign(this.props.classNames, classNames);
-    };
-
     // Form change event listener
-    handleChange = (e) => {
+    onFormChange = (e) => {
       const { name, type, value } = e.target;
       const { fields } = this.state;
 
@@ -255,19 +264,6 @@ export default (schemas = {}, methods) => FormComponent => (
       this.setState({
         fields,
       });
-    };
-
-    /**
-     * Gets a list of form values
-     * @return {Object}
-     */
-    getFormValues = () => {
-      const { fields } = this.state;
-      const values = {};
-      Object.keys(fields).forEach((name) => {
-        values[name] = fields[name].value;
-      });
-      return values;
     };
 
     /**
@@ -347,32 +343,14 @@ export default (schemas = {}, methods) => FormComponent => (
     // Validate all
     validate = () => {
       const names = Object.keys(schemas);
-      const result = this.validateFieldsByNames(...names);
-      const { fields } = this.state;
-      // Update
-      this.setState({
-        fields,
-      });
-      return result;
+      return this.validateByNames(...names);
     };
 
     render() {
       return (
         <FormComponent
           {...this.props}
-          fields={this.fields}
-          isAllValid={this.isAllValid}
-          initValues={this.initValues}
-          initClassNames={this.initClassNames}
-          onChange={this.handleChange}
-          changeValues={this.changeValues}
-          getFormValues={this.getFormValues}
-          validate={this.validate}
-          validateByNames={this.validateByNames}
-          addFields={this.addFields}
-          removeFields={this.removeFields}
-          addSchemas={this.addSchemas}
-          removeSchemas={this.removeSchemas}
+          formControl={this}
         />
       );
     }
