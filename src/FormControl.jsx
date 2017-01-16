@@ -136,7 +136,7 @@ export default (schemas = {}, methods) => FormComponent => (
      * @param values
      * @param classes
      */
-    init(values, classes) {
+    init = (values, classes) => {
       const { classNames } = this.props;
       const { fields } = this.state;
       // Merge
@@ -148,7 +148,7 @@ export default (schemas = {}, methods) => FormComponent => (
           value: values[name],
         };
       });
-    }
+    };
 
     /**
      * Assemble the data
@@ -156,7 +156,7 @@ export default (schemas = {}, methods) => FormComponent => (
      * @param name
      * @param value
      */
-    assembleFieldValidate(name, value) {
+    assembleFieldValidate = (name, value) => {
       const { classNames } = this.props;
       const { fields } = this.state;
       // No schema is not to validate
@@ -176,7 +176,7 @@ export default (schemas = {}, methods) => FormComponent => (
         result,
         message: error ? error.message : undefined,
       });
-    }
+    };
 
     /**
      * Validate a single field
@@ -184,19 +184,19 @@ export default (schemas = {}, methods) => FormComponent => (
      * @param value
      * @return {Boolean}
      */
-    validateField(name, value) {
+    validateField = (name, value) => {
       const { fields } = this.state;
       // Assemble
       this.assembleFieldValidate(name, value);
       return fields[name].result;
-    }
+    };
 
     /**
      * Validate fields by names
      * @param names
      * @return {Boolean}
      */
-    validateFieldsByNames(...names) {
+    validateFieldsByNames = (...names) => {
       const { fields } = this.state;
       let isValid = true;
       names.forEach((name) => {
@@ -207,7 +207,7 @@ export default (schemas = {}, methods) => FormComponent => (
         }
       });
       return isValid;
-    }
+    };
 
     // Form change event listener
     onFormChange = (e) => {
