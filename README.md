@@ -108,8 +108,10 @@ Of course, you can also use unencapsulated form components, just specify `value`
 
 ```js
 const {
-  fields,
-  onChange,
+  formControl: {
+    fields,
+    onFormChange,
+  },
 } = this.props;
 
 return (
@@ -117,7 +119,7 @@ return (
     className={fields.email.className}
     name="email"
     type="text"
-    onChange={onChange}
+    onChange={onFormChange}
     value={fields.email.value}
     placeholder="Please input your email"
   />
