@@ -8,7 +8,7 @@ import './bootstrap.css';
 import App from './App';
 
 ReactDOM.render(
-  <App />,
+  <App />, // eslint-disable-line react/jsx-filename-extension
   document.getElementById('root'),
 );
 

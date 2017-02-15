@@ -7,9 +7,7 @@
     "window": true
   },
   "rules": {
-    "import/extensions": "off",
     "import/no-extraneous-dependencies": "off",
-    "react/forbid-prop-types": "off",
-    "react/jsx-filename-extension": "off"
+    "react/forbid-prop-types": "off"
   }
 }
