@@ -19,6 +19,7 @@ describe('Test to create a basic form', () => {
     );
     expect(app.exists()).to.equal(true);
     expect(app.node.props.formControl).to.be.an.instanceOf(Object);
+    expect(app.node.props.formControl.formValues.email).to.be.empty;
   });
 
   it('The form attribute is correct', () => {

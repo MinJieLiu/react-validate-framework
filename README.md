@@ -76,9 +76,6 @@ Finally, sets the initialized value:
 
 ```js
 <BasicForm
-  ref={(ref) => {
-    this.basicForm = ref;
-  }}
   classNames={{
     static: 'form-control',
     success: 'valid-success',
