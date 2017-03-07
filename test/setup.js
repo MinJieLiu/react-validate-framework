@@ -5,6 +5,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { shallow, render, mount } from 'enzyme';
+import './jsdom';
 import {
   TextApp1,
   TextApp2,
@@ -31,4 +32,42 @@ describe('Test to create a basic form', () => {
     expect(item.attr('id')).to.equal('email');
   });
 
+});
+
+
+describe('Test Form change validation', () => {
+  it('The form is validated correctly', () => {
+    const app = mount(
+      <TextApp2
+        classNames={{
+          static: 'form-control',
+          success: 'valid-success',
+          error: 'valid-error',
+        }}
+        values={{ email: '' }}
+      />,
+    );
+    const input = app.find('input');
+    const label = app.find('label');
+
+    expect(label.text()).to.be.empty;
+    // trigger
+    input.simulate('change');
+    expect(input.props().className).to.contains('valid-error');
+    expect(label.text()).to.equal('Can not be empty!');
+    expect(app.node.formValues.email).to.be.empty;
+    // Change
+    input.get(0).value = 'example#example.com';
+    input.simulate('change');
+    expect(label.text()).to.equal('Please enter a valid email address.');
+    expect(app.node.isAllValid).to.equal(false);
+    // Change
+    input.get(0).value = 'example@example.com';
+    input.simulate('change');
+    expect(label.text()).to.be.empty;
+    expect(input.props().className).to.contains('valid-success');
+    expect(app.node.isAllValid).to.equal(true);
+  });
+
+  // it('Initialize the parameter by function', () => {});
 });
