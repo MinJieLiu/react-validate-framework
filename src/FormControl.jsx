@@ -32,6 +32,8 @@ export default (schemas = {}, methods) => FormComponent => (
       classNames: {},
     };
 
+    schemas = Object.assign({}, schemas);
+
     constructor(props) {
       super(props);
       const {
@@ -127,7 +129,7 @@ export default (schemas = {}, methods) => FormComponent => (
      */
     get isAllValid() {
       const { fields } = this.state;
-      return Object.keys(schemas)
+      return Object.keys(this.schemas)
         .every(name => fields[name] && fields[name].result);
     }
 
@@ -160,7 +162,7 @@ export default (schemas = {}, methods) => FormComponent => (
       const { classNames } = this.props;
       const { fields } = this.state;
       // No schema is not to validate
-      const schema = schemas[name] && Object.assign(schemas[name], { value });
+      const schema = this.schemas[name] && Object.assign(this.schemas[name], { value });
       const { result, error } = schema ? this.validator.validateByField(schema) : {};
       // Assembly class name
       // Validation success and validation failure Add the appropriate class
@@ -271,7 +273,7 @@ export default (schemas = {}, methods) => FormComponent => (
      * @param schema
      */
     addSchemas = (schema) => {
-      Object.assign(schemas, schema);
+      Object.assign(this.schemas, schema);
     };
 
     /**
@@ -281,7 +283,7 @@ export default (schemas = {}, methods) => FormComponent => (
     removeSchemas = (...names) => {
       const { fields } = this.state;
       names.forEach((name) => {
-        delete schemas[name]; // eslint-disable-line no-param-reassign
+        delete this.schemas[name];
       });
       // Validate the deleted status
       this.validateFieldsByNames(...names);
@@ -342,7 +344,7 @@ export default (schemas = {}, methods) => FormComponent => (
 
     // Validate all
     validate = () => {
-      const names = Object.keys(schemas);
+      const names = Object.keys(this.schemas);
       return this.validateByNames(...names);
     };
 

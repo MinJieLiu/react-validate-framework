@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { shallow, render, mount } from 'enzyme';
 import './jsdom';
@@ -36,6 +37,7 @@ describe('Test to create a basic form', () => {
 
 
 describe('Test Form change validation', () => {
+
   it('The form is validated correctly', () => {
     const app = mount(
       <TextApp2
@@ -60,14 +62,82 @@ describe('Test Form change validation', () => {
     input.get(0).value = 'example#example.com';
     input.simulate('change');
     expect(label.text()).to.equal('Please enter a valid email address.');
+    expect(app.node.validate()).to.equal(false);
     expect(app.node.isAllValid).to.equal(false);
     // Change
     input.get(0).value = 'example@example.com';
     input.simulate('change');
     expect(label.text()).to.be.empty;
     expect(input.props().className).to.contains('valid-success');
+    expect(app.node.validate()).to.equal(true);
     expect(app.node.isAllValid).to.equal(true);
   });
 
-  // it('Initialize the parameter by function', () => {});
+  it('API is executed correctly', () => {
+    const app = mount(
+      <TextApp2
+        classNames={{
+          static: 'form-control',
+          success: 'valid-success',
+          error: 'valid-error',
+        }}
+        values={{ email: '' }}
+      />,
+    );
+    // init
+    app.node.init({ email2: '' });
+    expect(app.node.formValues).to.have.property('email2');
+    expect(app.node.validateByNames('email2')).to.equal(true);
+    // add fields
+    app.node.addFields({ email3: { value: '123#123.com' } });
+    expect(app.node.formValues).to.have.property('email3');
+    expect(app.node.validate()).to.equal(false);
+    expect(app.node.validateByNames('email3')).to.equal(true);
+    // add schemas
+    app.node.addSchemas({ email4: { rules: 'isEmail' } });
+    app.node.addFields({ email4: { value: '123#123.com' } });
+    expect(app.node.validate()).to.equal(false);
+    expect(app.node.validateByNames('email4')).to.equal(false);
+    // change values
+    app.node.changeValues({ email: '123@123.com', email4: '123@123.com' });
+    expect(app.node.validateByNames('email')).to.equal(true);
+    expect(app.node.validate()).to.equal(true);
+  });
+
+});
+
+
+describe('Test all types of forms', () => {
+
+  it('The all types of form is validated correctly', () => {
+    const app = mount(
+      <TextApp3
+        classNames={{
+          static: 'form-control',
+          success: 'valid-success',
+          error: 'valid-error',
+        }}
+        values={{
+          hobby: ['1'],
+          sex: '',
+          city: '',
+          remarks: '',
+        }}
+      />,
+    );
+    app.find('#hobby2').simulate('change');
+    expect(app.node.formValues.hobby.indexOf('2') !== -1).to.equal(true);
+    app.find('#hobby3').simulate('change');
+    expect(app.node.formValues.hobby.indexOf('3') !== -1).to.equal(true);
+    app.find('#sex2').simulate('change');
+    expect(app.node.formValues.sex).to.equal('2');
+    app.find('select').get('0').value = '1';
+    app.find('select').simulate('change');
+    expect(app.node.formValues.city).to.equal('1');
+    app.find('#remarks').get('0').value = 'abc';
+    app.find('#remarks').simulate('change');
+    expect(app.node.formValues.remarks).to.equal('abc');
+    expect(app.node.validate()).to.equal(true);
+  });
+
 });

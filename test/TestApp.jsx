@@ -36,12 +36,33 @@ export const TextApp3 = fromConnect({
     rules: 'required',
     messages: 'Can not be empty!',
   },
+  sex: {
+    rules: 'required',
+    messages: 'Can not be empty!',
+  },
+  city: {
+    rules: 'required',
+    messages: 'Can not be empty!',
+  },
+  remarks: {
+    rules: 'required',
+    messages: 'Can not be empty!',
+  },
 })(() => (
   <section>
-    <Checkbox name="hobby" id="hobby1" />
-    <label htmlFor="hobby1">hobby1</label>
-    <Checkbox name="hobby" id="hobby2" />
-    <label htmlFor="hobby2">hobby1</label>
+    <Checkbox name="hobby" id="hobby1" value="1" />
+    <Checkbox name="hobby" id="hobby2" value="2" />
+    <Checkbox name="hobby" id="hobby3" value="3" />
     <Message name="hobby" />
+    <Radio name="sex" id="sex1" value="1" />
+    <Radio name="sex" id="sex2" value="2" />
+    <Message name="sex" />
+    <Select name="city">
+      <option value="">option1</option>
+      <option value="1">option2</option>
+    </Select>
+    <Message name="city" />
+    <Textarea name="remarks" id="remarks" />
+    <Message name="remarks" />
   </section>
 ));
