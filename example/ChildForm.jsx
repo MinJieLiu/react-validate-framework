@@ -25,25 +25,22 @@ class ChildForm extends Component {
   }
 
   handleAddFriends = () => {
-    const { formControl: { addFields, addSchemas } } = this.props;
-    // init value
-    addFields({
-      friend: {
-        value: '',
-      },
-    });
-    addSchemas({
+    const { formControl } = this.props;
+    formControl.addSchemas({
       friend: {
         rules: 'required',
         messages: 'Can not be empty!',
       },
+    }).addValues({
+      friend: '',
     });
   };
 
   handleDeleteFriend = () => {
-    const { formControl: { removeSchemas, removeFields } } = this.props;
-    removeSchemas('friend');
-    removeFields('friend');
+    const { formControl } = this.props;
+    formControl
+      .removeSchemas('friend')
+      .removeValues('friend');
   };
 
   render() {

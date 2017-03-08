@@ -2,8 +2,10 @@
  * TestApp
  */
 
-import React from 'react';
-import fromConnect, {
+/* eslint-disable react/no-multi-comp */
+
+import React, { Component, PropTypes } from 'react';
+import formConnect, {
   Checkbox,
   Radio,
   Select,
@@ -13,12 +15,12 @@ import fromConnect, {
 } from '../src';
 
 
-export const TextApp1 = fromConnect()(() => (
+export const TestApp1 = formConnect()(() => (
   <Text name="email" id="email" />
 ));
 
 
-export const TextApp2 = fromConnect({
+export const TestApp2 = formConnect({
   email: {
     rules: 'required | isEmail',
     messages: 'Can not be empty! | Please enter a valid email address.',
@@ -31,7 +33,7 @@ export const TextApp2 = fromConnect({
 ));
 
 
-export const TextApp3 = fromConnect({
+export const TestApp3 = formConnect({
   hobby: {
     rules: 'required',
     messages: 'Can not be empty!',
@@ -66,3 +68,76 @@ export const TextApp3 = fromConnect({
     <Message name="remarks" />
   </section>
 ));
+
+
+export class TestChildApp extends Component {
+
+  static propTypes = {
+    formControl: PropTypes.object,
+  };
+
+  constructor(props) {
+    super(props);
+    props.formControl.addSchemas({
+      birthday: {
+        rules: 'isDate',
+        messages: 'Please enter a valid date.',
+      },
+    });
+  }
+
+  componentWillMount() {
+    this.props.formControl.init({ birthday: '' });
+  }
+
+  componentWillUnmount() {
+    this.props.formControl.removeValues('birthday');
+  }
+
+  render() {
+    return (
+      <section>
+        <Text name="birthday" />
+        <Message name="birthday" />
+      </section>
+    );
+  }
+}
+
+
+export const TestApp4 = formConnect({
+  phone: {
+    rules: 'isPhone',
+    messages: 'Mobile: {{value}} is not valid.',
+  },
+})(
+  class extends Component {
+
+    static propTypes = {
+      formControl: PropTypes.object,
+    };
+
+    constructor(props) {
+      super(props);
+      props.formControl.init({
+        phone: '',
+      }, {
+        static: 'form-control',
+        success: 'valid-success',
+        error: 'valid-error',
+      });
+    }
+
+    render() {
+      return (
+        <div>
+          <section>
+            <Text name="phone" id="phone" />
+            <Message name="phone" id="phoneMessage" />
+          </section>
+          <TestChildApp {...this.props} />
+        </div>
+      );
+    }
+  },
+);

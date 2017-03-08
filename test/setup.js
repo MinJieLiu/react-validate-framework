@@ -8,16 +8,17 @@ import { expect } from 'chai';
 import { shallow, render, mount } from 'enzyme';
 import './jsdom';
 import {
-  TextApp1,
-  TextApp2,
-  TextApp3,
+  TestApp1,
+  TestApp2,
+  TestApp3,
+  TestApp4,
 } from './TestApp';
 
 describe('Test to create a basic form', () => {
 
   it('The form is rendered correctly', () => {
     const app = shallow(
-      <TextApp1 values={{ email: '' }} />,
+      <TestApp1 values={{ email: '' }} />,
     );
     expect(app.exists()).to.equal(true);
     expect(app.node.props.formControl).to.be.an.instanceOf(Object);
@@ -26,7 +27,7 @@ describe('Test to create a basic form', () => {
 
   it('The form attribute is correct', () => {
     const app = render(
-      <TextApp1 values={{ email: '' }} />,
+      <TestApp1 values={{ email: '' }} />,
     );
     const item = app.find('#email');
     expect(item.attr('name')).to.equal('email');
@@ -40,7 +41,7 @@ describe('Test Form change validation', () => {
 
   it('The form is validated correctly', () => {
     const app = mount(
-      <TextApp2
+      <TestApp2
         classNames={{
           static: 'form-control',
           success: 'valid-success',
@@ -75,7 +76,7 @@ describe('Test Form change validation', () => {
 
   it('API is executed correctly', () => {
     const app = mount(
-      <TextApp2
+      <TestApp2
         classNames={{
           static: 'form-control',
           success: 'valid-success',
@@ -89,13 +90,13 @@ describe('Test Form change validation', () => {
     expect(app.node.formValues).to.have.property('email2');
     expect(app.node.validateByNames('email2')).to.equal(true);
     // add fields
-    app.node.addFields({ email3: { value: '123#123.com' } });
+    app.node.addValues({ email3: '123#123.com' });
     expect(app.node.formValues).to.have.property('email3');
     expect(app.node.validate()).to.equal(false);
     expect(app.node.validateByNames('email3')).to.equal(true);
     // add schemas
     app.node.addSchemas({ email4: { rules: 'isEmail' } });
-    app.node.addFields({ email4: { value: '123#123.com' } });
+    app.node.addValues({ email4: '123#123.com' });
     expect(app.node.validate()).to.equal(false);
     expect(app.node.validateByNames('email4')).to.equal(false);
     // change values
@@ -111,7 +112,7 @@ describe('Test all types of forms', () => {
 
   it('The all types of form is validated correctly', () => {
     const app = mount(
-      <TextApp3
+      <TestApp3
         classNames={{
           static: 'form-control',
           success: 'valid-success',
@@ -138,6 +139,42 @@ describe('Test all types of forms', () => {
     app.find('#remarks').simulate('change');
     expect(app.node.formValues.remarks).to.equal('abc');
     expect(app.node.validate()).to.equal(true);
+  });
+
+});
+
+describe('Test nested forms', () => {
+
+  it('The nested form is rendered correctly', () => {
+    const app = mount(
+      <TestApp4 />,
+    );
+    const phone = app.find('#phone');
+    expect(phone.props().name).to.equal('phone');
+    expect(phone.props().className).to.contains('form-control');
+    expect(app.node.fields).to.have.property('birthday');
+    expect(app.node.fields).to.have.property('birthday');
+    expect(app.node.schemas).to.have.property('phone');
+    expect(app.node.schemas).to.have.property('birthday');
+  });
+
+  it('The nested form is changed correctly', () => {
+    const app = mount(
+      <TestApp4 />,
+    );
+    const phone = app.find('#phone');
+    // change
+    phone.get('0').value = '123456789';
+    phone.simulate('change');
+    expect(app.find('#phoneMessage').text()).to.equal('Mobile: 123456789 is not valid.');
+    // change
+    app.node.changeValues({ phone: '1555555555', birthday: '2010-10-10' });
+    expect(app.node.formValues.phone).to.equal('1555555555');
+    expect(app.node.formValues.birthday).to.equal('2010-10-10');
+    expect(app.node.isAllValid).to.equal(false);
+    // removeSchemas
+    app.node.removeSchemas('phone');
+    expect(app.node.isAllValid).to.equal(true);
   });
 
 });

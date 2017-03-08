@@ -145,10 +145,10 @@ return (
 | changeValues | function | | true | Customize to change the values |
 | validate | function | | true | Validate all fields |
 | validateByNames | function | | true | Validate the component through names |
-| addFields | function | | true | Add one or more fields |
-| removeFields | function | | true | Deletes one or more fields |
+| addValues | function | | true | Add one or more value |
+| removeValues | function | | true | Remove one or more value |
 | addSchemas | function | | false | Add one or more validation rules |
-| removeSchemas | function | | true | Delete one or more validation rules |
+| removeSchemas | function | | true | Remove one or more validation rules |
 
 You can either pass in `values` as an argument, or call the `init` method when the form is initialized.
 

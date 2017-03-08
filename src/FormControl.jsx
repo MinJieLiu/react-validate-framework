@@ -11,7 +11,7 @@ import Validator from 'validate-framework-utils';
  * @param methods Extended Validation Method
  * @return Component
  */
-export default (schemas = {}, methods) => FormComponent => (
+export default (schemas, methods) => FormComponent => (
 
   /**
    * Returns a react form
@@ -145,11 +145,17 @@ export default (schemas = {}, methods) => FormComponent => (
       Object.assign(classNames, classes);
       // Initialize
       Object.keys(values).forEach((name) => {
+        const value = values[name];
         fields[name] = {
           className: classNames.static,
-          value: values[name],
+          value,
         };
+        // Synchronize values external state
+        if (this.props.values) {
+          this.props.values[name] = value;
+        }
       });
+      return this;
     };
 
     /**
@@ -255,17 +261,13 @@ export default (schemas = {}, methods) => FormComponent => (
       // Initializes
       this.init(values);
       Object.keys(values).forEach((name) => {
-        const value = values[name];
-        // Synchronize values external state
-        if (this.props.values) {
-          this.props.values[name] = value;
-        }
-        this.validateField(name, value);
+        this.validateField(name, values[name]);
       });
       // Update
       this.setState({
         fields,
       });
+      return this;
     };
 
     /**
@@ -274,6 +276,7 @@ export default (schemas = {}, methods) => FormComponent => (
      */
     addSchemas = (schema) => {
       Object.assign(this.schemas, schema);
+      return this;
     };
 
     /**
@@ -291,32 +294,29 @@ export default (schemas = {}, methods) => FormComponent => (
       this.setState({
         fields,
       });
+      return this;
     };
 
     /**
      * Add one or more fields
-     * @param newFields
+     * @param values
      */
-    addFields = (newFields) => {
-      const { classNames } = this.props;
+    addValues = (values) => {
       const { fields } = this.state;
-      Object.keys(newFields).forEach((name) => {
-        Object.assign(newFields[name], {
-          className: classNames.static,
-        });
-      });
-      Object.assign(fields, newFields);
+      // Initializes
+      this.init(values);
       // Update
       this.setState({
         fields,
       });
+      return this;
     };
 
     /**
      * Deletes one or more fields
      * @param names
      */
-    removeFields = (...names) => {
+    removeValues = (...names) => {
       const { fields } = this.state;
       names.forEach((name) => {
         delete fields[name];
@@ -325,6 +325,7 @@ export default (schemas = {}, methods) => FormComponent => (
       this.setState({
         fields,
       });
+      return this;
     };
 
     /**
