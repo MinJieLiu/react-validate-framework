@@ -18,7 +18,8 @@ class ChildForm extends Component {
   constructor(props) {
     super(props);
     // Initializes the values
-    props.formControl.init({
+    const { formControl } = props;
+    formControl.init({
       url: '',
     });
   }

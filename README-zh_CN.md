@@ -160,3 +160,4 @@ return (
 | removeValues | function | | true | 删除一个或多个值 |
 | addSchemas | function | | false | 添加一个或多个验证规则 |
 | removeSchemas | function | | true | 删除一个或多个验证规则 |
+| formDidChange | function | | | 回调函数 |

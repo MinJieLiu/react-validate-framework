@@ -149,6 +149,7 @@ return (
 | removeValues | function | | true | Remove one or more value |
 | addSchemas | function | | false | Add one or more validation rules |
 | removeSchemas | function | | true | Remove one or more validation rules |
+| formDidChange | function | | | Callback |
 
 You can either pass in `values` as an argument, or call the `init` method when the form is initialized.
 

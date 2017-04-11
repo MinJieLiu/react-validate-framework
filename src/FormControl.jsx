@@ -252,6 +252,7 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
+      this.formDidChange();
     };
 
     /**
@@ -269,6 +270,7 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
+      this.formDidChange();
       return this;
     };
 
@@ -311,6 +313,7 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
+      this.formDidChange();
       return this;
     };
 
@@ -327,6 +330,7 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
+      this.formDidChange();
       return this;
     };
 
@@ -350,6 +354,9 @@ export default (schemas, methods) => FormComponent => (
       const names = Object.keys(this.schemas);
       return this.validateByNames(...names);
     };
+
+    // After change
+    formDidChange = () => {};
 
     render() {
       return (
