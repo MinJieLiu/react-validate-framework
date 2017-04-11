@@ -19,7 +19,6 @@ class ChildForm extends Component {
     super(props);
     // Initializes the values
     props.formControl.init({
-      money: '',
       url: '',
     });
   }

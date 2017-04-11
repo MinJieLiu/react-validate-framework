@@ -25,6 +25,7 @@ export default (schemas, methods) => FormComponent => (
 
     static childContextTypes = {
       fields: PropTypes.object.isRequired,
+      initField: PropTypes.func.isRequired,
       onFormChange: PropTypes.func.isRequired,
     };
 
@@ -66,6 +67,7 @@ export default (schemas, methods) => FormComponent => (
     getChildContext() {
       return {
         fields: this.state.fields,
+        initField: this.init,
         onFormChange: this.onFormChange,
       };
     }

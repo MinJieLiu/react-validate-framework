@@ -10,13 +10,7 @@ export default class extends Component {
 
   state = {
     formValues: {
-      email: '',
-      phone: '',
-      birthday: '',
-      sex: '',
-      city: '',
-      hobby: ['2'],
-      remarks: '',
+      sex: '1', // default
     },
     isAllValid: undefined,
   };

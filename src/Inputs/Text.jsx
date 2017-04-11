@@ -8,4 +8,4 @@ export default Object.assign(Field.bind(null, ({ field, ...props }) => (
     value={field.value}
     {...props}
   />
-)), Field);
+), 'text'), Field);

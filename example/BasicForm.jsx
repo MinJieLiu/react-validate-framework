@@ -140,7 +140,7 @@ class BasicForm extends Component {
               <Radio
                 id="male"
                 name="sex"
-                value="0"
+                value="1"
               />
               male
             </label>
@@ -148,7 +148,7 @@ class BasicForm extends Component {
               <Radio
                 id="female"
                 name="sex"
-                value="1"
+                value="2"
               />
               female
             </label>

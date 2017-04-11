@@ -18,7 +18,7 @@ describe('Test to create a basic form', () => {
 
   it('The form is rendered correctly', () => {
     const app = shallow(
-      <TestApp1 values={{ email: '' }} />,
+      <TestApp1 />,
     );
     expect(app.exists()).to.equal(true);
     expect(app.node.props.formControl).to.be.an.instanceOf(Object);
@@ -27,7 +27,7 @@ describe('Test to create a basic form', () => {
 
   it('The form attribute is correct', () => {
     const app = render(
-      <TestApp1 values={{ email: '' }} />,
+      <TestApp1 />,
     );
     const item = app.find('#email');
     expect(item.attr('name')).to.equal('email');
@@ -47,7 +47,6 @@ describe('Test Form change validation', () => {
           success: 'valid-success',
           error: 'valid-error',
         }}
-        values={{ email: '' }}
       />,
     );
     const input = app.find('input');
@@ -82,7 +81,6 @@ describe('Test Form change validation', () => {
           success: 'valid-success',
           error: 'valid-error',
         }}
-        values={{ email: '' }}
       />,
     );
     // init
@@ -120,9 +118,6 @@ describe('Test all types of forms', () => {
         }}
         values={{
           hobby: ['1'],
-          sex: '',
-          city: '',
-          remarks: '',
         }}
       />,
     );

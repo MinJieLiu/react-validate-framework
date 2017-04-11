@@ -8,4 +8,4 @@ export default Object.assign(Field.bind(null, ({ field, value, ...props }) => (
     {...props}
     type="radio"
   />
-)), Field);
+), 'radio'), Field);
