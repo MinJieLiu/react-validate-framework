@@ -97,12 +97,13 @@ export default formConnect(schemas, methods)(BasicForm);
     error: 'valid-error',
   }}
   values={this.state.formValues}
+  delay={100}
 />
 ```
 
 
  * `values` 的值类似于 { email: '', hobby: ['2'] }
- * 这些参数也可以在 `BasicForm` 中使用 `init` 方法初始化
+ * `classNames` 和 `values` 也可以在 `BasicForm` 中使用 `init` 方法初始化
 
 基础验证方法可以参考 [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
@@ -147,6 +148,7 @@ return (
 | :--- | :--- | :--- | :--- | :--- |
 | values | Object | false | | `values` 集合 |
 | classNames | Object | false | {} | 其 key 值包含 `static`，`success`，`error` 三种类名 |
+| delay | number | false | | 验证防抖 |
 
 #### Form params
 

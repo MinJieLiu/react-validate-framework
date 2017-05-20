@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import Validator from 'validate-framework-utils';
+import debounce from 'lodash/debounce';
 
 /**
  * React validation component
@@ -21,6 +22,7 @@ export default (schemas, methods) => FormComponent => (
     static propTypes = {
       values: PropTypes.object,
       classNames: PropTypes.object,
+      delay: PropTypes.number,
     };
 
     static childContextTypes = {
@@ -31,6 +33,7 @@ export default (schemas, methods) => FormComponent => (
 
     static defaultProps = {
       classNames: {},
+      delay: 0,
     };
 
     schemas = Object.assign({}, schemas);
@@ -40,7 +43,13 @@ export default (schemas, methods) => FormComponent => (
       const {
         classNames,
         values,
+        delay,
       } = props;
+      // delay
+
+      if (delay) {
+        this.delayValidateField = debounce(this.delayValidateField.bind(this), delay);
+      }
 
       const fields = {};
       // Assemble the initialization data into fields
@@ -88,7 +97,8 @@ export default (schemas, methods) => FormComponent => (
         if (fields[name]) {
           // diff
           if (fields[name].value !== newValue) {
-            this.assembleFieldValidate(name, newValue);
+            this.assembleFieldChange(name, newValue)
+              .delayValidateField(name, newValue);
           }
         } else {
           // Add a new field
@@ -165,6 +175,21 @@ export default (schemas, methods) => FormComponent => (
      * This method is not operational
      * @param name
      * @param value
+     * @return {FormControl}
+     */
+    assembleFieldChange = (name, value) => {
+      Object.assign(this.state.fields[name], {
+        value,
+      });
+      return this;
+    };
+
+    /**
+     * Validate the data
+     * This method is not operational
+     * @param name
+     * @param value
+     * @return {FormControl}
      */
     assembleFieldValidate = (name, value) => {
       const { classNames } = this.props;
@@ -181,11 +206,11 @@ export default (schemas, methods) => FormComponent => (
       ];
       // Assemble
       Object.assign(fields[name], {
-        value,
         className: classNameArray.filter(item => item).join('\u{20}'),
         result,
         message: error ? error.message : undefined,
       });
+      return this;
     };
 
     /**
@@ -200,6 +225,24 @@ export default (schemas, methods) => FormComponent => (
       this.assembleFieldValidate(name, value);
       return fields[name].result;
     };
+
+    /**
+     * DelayValidateField
+     * @param name
+     * @param value
+     */
+    delayValidateField(name, value) {
+      const { delay } = this.props;
+      const { fields } = this.state;
+      // Assemble
+      this.assembleFieldValidate(name, value);
+      // reduce diff
+      if (delay) {
+        this.setState({
+          fields,
+        });
+      }
+    }
 
     /**
      * Validate fields by names
@@ -246,8 +289,8 @@ export default (schemas, methods) => FormComponent => (
       if (this.props.values) {
         this.props.values[name] = theValue;
       }
-      // Validate
-      this.validateField(name, theValue);
+      // Assemble and validate
+      this.assembleFieldChange(name, theValue).delayValidateField(name, theValue);
       // Update
       this.setState({
         fields,
@@ -263,9 +306,8 @@ export default (schemas, methods) => FormComponent => (
       const { fields } = this.state;
       // Initializes
       this.init(values);
-      Object.keys(values).forEach((name) => {
-        this.validateField(name, values[name]);
-      });
+      Object.keys(values).forEach(name => this.assembleFieldChange(name, values[name])
+        .delayValidateField(name, values[name]));
       // Update
       this.setState({
         fields,
@@ -356,7 +398,8 @@ export default (schemas, methods) => FormComponent => (
     };
 
     // After change
-    formDidChange = () => {};
+    formDidChange = () => {
+    };
 
     render() {
       return (

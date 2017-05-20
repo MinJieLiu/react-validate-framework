@@ -87,10 +87,11 @@ Finally, sets the initialized value:
     error: 'valid-error',
   }}
   values={this.state.formValues}
+  delay={100}
 />
 
 // The values like this { email: '', hobby: ['2'] }
-// These props can be initialized in `BasicForm` use `init`
+// classNames and values can be initialized in `BasicForm` use `init`
 ```
 
 Validate methods can refer to [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
@@ -136,6 +137,7 @@ return (
 | :--- | :--- | :--- | :--- | :--- |
 | values | Object | false | | Key-value pairs for `name` and` value` |
 | classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
+| delay | number | false | | delay |
 
 #### Form params
 
