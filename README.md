@@ -38,8 +38,8 @@ const schemas = {
     messages: 'Can not be empty! | Please enter a valid email address. | Can not exceed {{param}} characters.',
   },
   hobby: {
-    rules: 'required | selectLimit(2)',
-    messages: 'Can not be empty! | Select at least {{param}}.',
+    rules: 'requiredField(phone) | selectLimit(2)',
+    messages: 'email and hobby at least one entry! | Select at least {{param}}.',
   },
 };
 
@@ -49,6 +49,10 @@ const methods = {
       return field.value.length >= param;
     }
     return false;
+  },
+  requiredField(field, param) {
+    const otherField = this.fields[param];
+    return this.required(field) || (otherField.result && this.required(otherField));
   },
 };
 ```

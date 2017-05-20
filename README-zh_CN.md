@@ -44,8 +44,8 @@ const schemas = {
     messages: '不能为空 | 请输入有效的电子邮件地址 | 不能超过{{param}}个字符',
   },
   hobby: {
-    rules: 'required | selectLimit(2)',
-    messages: '不能为空 | 至少选择{{param}}项',
+    rules: 'requiredField(email) | selectLimit(2)',
+    messages: '邮件和爱好至少填写一项 | 至少选择{{param}}项',
   },
 };
 
@@ -55,6 +55,10 @@ const methods = {
       return field.value.length >= param;
     }
     return false;
+  },
+  requiredField(field, param) {
+    const otherField = this.fields[param];
+    return this.required(field) || (otherField.result && this.required(otherField));
   },
 };
 ```

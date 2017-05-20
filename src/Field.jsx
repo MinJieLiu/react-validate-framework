@@ -1,15 +1,5 @@
 import React, { PropTypes } from 'react';
 
-const propTypes = {
-  name: PropTypes.string.isRequired,
-};
-
-const contextTypes = {
-  fields: PropTypes.object.isRequired,
-  initField: PropTypes.func.isRequired,
-  onFormChange: PropTypes.func.isRequired,
-};
-
 /**
  * Field component
  * @param FormComponent
@@ -46,7 +36,14 @@ const Field = (FormComponent, fieldType, {
   );
 };
 
-Field.propTypes = propTypes;
-Field.contextTypes = contextTypes;
+Field.propTypes = {
+  name: PropTypes.string.isRequired,
+};
+
+Field.contextTypes = {
+  fields: PropTypes.object.isRequired,
+  initField: PropTypes.func.isRequired,
+  onFormChange: PropTypes.func.isRequired,
+};
 
 export default Field;
