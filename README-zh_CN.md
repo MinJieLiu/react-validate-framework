@@ -60,6 +60,9 @@ const methods = {
     const otherField = this.fields[param];
     return this.required(field) || (otherField.result && this.required(otherField));
   },
+  async validateFromServer(field, param) {
+    return await doServerAPI();
+  },
 };
 ```
 
@@ -104,6 +107,7 @@ export default formConnect(schemas, methods)(BasicForm);
 
  * `values` 的值类似于 { email: '', hobby: ['2'] }
  * `classNames` 和 `values` 也可以在 `BasicForm` 中使用 `init` 方法初始化
+ * `delay` 防抖
 
 基础验证方法可以参考 [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
@@ -152,18 +156,19 @@ return (
 
 #### Form params
 
-| 名称 | 类型 | 默认值 | setState | 描述 |
+| 名称 | 类型 | 返回值 | setState | 描述 |
 | :--- | :--- | :--- | :--- | :--- |
 | fields | Object | | | `fields` 集合 |
 | isAllValid | Boolean | | | 全局验证状态 |
 | formValues | Object | | | 表单值的列表 |
-| init | function | | false | 初始化表单值和类 |
+| init | function | this | false | 初始化表单值和类 |
+| initClassNames | function | this | false | 初始化类 |
 | onFormChange | function | | true | 表单更改事件监听方法 |
-| changeValues | function | | true | 自定义改变表单方法 |
-| validate | function | | true | 验证所有字段 |
-| validateByNames | function | | true | 通过 `name` 验证组件 |
-| addValues | function | | true | 添加一个或多个值 |
-| removeValues | function | | true | 删除一个或多个值 |
-| addSchemas | function | | false | 添加一个或多个验证规则 |
-| removeSchemas | function | | true | 删除一个或多个验证规则 |
+| changeValues | function | this | true | 自定义改变表单方法 |
+| validate | function | Promise => Boolean | true | 验证所有字段 |
+| validateByNames | function | Promise => Boolean | true | 通过 `name` 验证组件 |
+| addValues | function | this | true | 添加一个或多个值 |
+| removeValues | function | this | true | 删除一个或多个值 |
+| addSchemas | function | this | false | 添加一个或多个验证规则 |
+| removeSchemas | function | Promise => this | true | 删除一个或多个验证规则 |
 | formDidChange | function | | | 回调函数 |

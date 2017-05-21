@@ -2,7 +2,8 @@
  * A lightweight and extensible React validation component
  */
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Validator from 'validate-framework-utils';
 import debounce from 'lodash/debounce';
 
@@ -17,7 +18,7 @@ export default (schemas, methods) => FormComponent => (
   /**
    * Returns a react form
    */
-  class FormControl extends Component {
+  class FormControl extends React.Component {
 
     static propTypes = {
       values: PropTypes.object,
@@ -151,15 +152,14 @@ export default (schemas, methods) => FormComponent => (
      * @param classes
      */
     init = (values, classes) => {
-      const { classNames } = this.props;
       const { fields } = this.state;
-      // Merge
-      Object.assign(classNames, classes);
+      // Assign classNames
+      this.initClassNames(classes);
       // Initialize
       Object.keys(values).forEach((name) => {
         const value = values[name];
         fields[name] = {
-          className: classNames.static,
+          className: this.props.classNames.static,
           value,
         };
         // Synchronize values external state
@@ -167,6 +167,16 @@ export default (schemas, methods) => FormComponent => (
           this.props.values[name] = value;
         }
       });
+      return this;
+    };
+
+    /**
+     * Init classNames
+     * @param classes
+     */
+    initClassNames = (classes) => {
+      // Merge
+      Object.assign(this.props.classNames, classes);
       return this;
     };
 
@@ -191,12 +201,14 @@ export default (schemas, methods) => FormComponent => (
      * @param value
      * @return {FormControl}
      */
-    assembleFieldValidate = (name, value) => {
+    assembleFieldValidate = async (name, value) => {
       const { classNames } = this.props;
       const { fields } = this.state;
       // No schema is not to validate
       const schema = this.schemas[name] && Object.assign(this.schemas[name], { value });
-      const { result, error } = schema ? this.validator.validateByField(schema) : {};
+      const { result, error } = schema
+        ? await this.validator.validateByField(schema)
+        : {};
       // Assembly class name
       // Validation success and validation failure Add the appropriate class
       const classNameArray = [
@@ -219,10 +231,10 @@ export default (schemas, methods) => FormComponent => (
      * @param value
      * @return {Boolean}
      */
-    validateField = (name, value) => {
+    validateField = async (name, value) => {
       const { fields } = this.state;
       // Assemble
-      this.assembleFieldValidate(name, value);
+      await this.assembleFieldValidate(name, value);
       return fields[name].result;
     };
 
@@ -231,17 +243,14 @@ export default (schemas, methods) => FormComponent => (
      * @param name
      * @param value
      */
-    delayValidateField(name, value) {
-      const { delay } = this.props;
+    async delayValidateField(name, value) {
       const { fields } = this.state;
       // Assemble
-      this.assembleFieldValidate(name, value);
-      // reduce diff
-      if (delay) {
-        this.setState({
-          fields,
-        });
-      }
+      await this.assembleFieldValidate(name, value);
+      this.setState({
+        fields,
+      });
+      return this;
     }
 
     /**
@@ -249,16 +258,17 @@ export default (schemas, methods) => FormComponent => (
      * @param names
      * @return {Boolean}
      */
-    validateFieldsByNames = (...names) => {
+    validateFieldsByNames = async (...names) => {
       const { fields } = this.state;
       let isValid = true;
-      names.forEach((name) => {
-        const result = fields[name] && this.validateField(name, fields[name].value);
+      // eslint-disable-next-line no-restricted-syntax
+      for (const name of names) {
+        const result = fields[name] && await this.validateField(name, fields[name].value);
         // Exclude unauthenticated and validated successfully
         if (result === false) {
           isValid = false;
         }
-      });
+      }
       return isValid;
     };
 
@@ -289,7 +299,7 @@ export default (schemas, methods) => FormComponent => (
       if (this.props.values) {
         this.props.values[name] = theValue;
       }
-      // Assemble and validate
+      // Assemble and delay validate
       this.assembleFieldChange(name, theValue).delayValidateField(name, theValue);
       // Update
       this.setState({
@@ -329,13 +339,13 @@ export default (schemas, methods) => FormComponent => (
      * Delete one or more validation rules
      * @param names
      */
-    removeSchemas = (...names) => {
+    removeSchemas = async (...names) => {
       const { fields } = this.state;
       names.forEach((name) => {
         delete this.schemas[name];
       });
       // Validate the deleted status
-      this.validateFieldsByNames(...names);
+      await this.validateFieldsByNames(...names);
       // Update
       this.setState({
         fields,
@@ -381,8 +391,8 @@ export default (schemas, methods) => FormComponent => (
      * @param names
      * @return {Boolean}
      */
-    validateByNames = (...names) => {
-      const result = this.validateFieldsByNames(...names);
+    validateByNames = async (...names) => {
+      const result = await this.validateFieldsByNames(...names);
       const { fields } = this.state;
       // Update
       this.setState({

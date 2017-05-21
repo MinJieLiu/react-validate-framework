@@ -16,8 +16,8 @@ export default class extends Component {
   };
 
   // Validate the BasicForm
-  handleValidateBasicForm = () => {
-    const isAllValid = this.basicForm.validate();
+  handleValidateBasicForm = async () => {
+    const isAllValid = await this.basicForm.validate();
     this.setState({
       isAllValid,
     });

@@ -2,7 +2,8 @@
  * Created by MingYi on 2016/12/23.
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import formConnect, {
   Checkbox,
@@ -55,6 +56,8 @@ const schemas = {
   },
 };
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 // Custom methods
 const methods = {
   // Rely on other fields
@@ -62,7 +65,9 @@ const methods = {
     const otherField = this.fields[param];
     return this.required(field) || (otherField.result && this.required(otherField));
   },
-  selectLimit(field, param) {
+  async selectLimit(field, param) {
+    // Simulation
+    await sleep(1000);
     if (Array.isArray(field.value)) {
       return field.value.length >= param;
     }
@@ -77,9 +82,8 @@ class BasicForm extends Component {
   };
 
   handleSubmitClick = () => {
-    const { formControl } = this.props;
-    // @return {Boolean}
-    formControl.validate();
+    // @return {Promise}
+    this.props.formControl.validate();
   };
 
   render() {

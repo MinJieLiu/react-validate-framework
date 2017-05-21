@@ -54,6 +54,9 @@ const methods = {
     const otherField = this.fields[param];
     return this.required(field) || (otherField.result && this.required(otherField));
   },
+  async validateFromServer(field, param) {
+    return await doServerAPI();
+  },
 };
 ```
 
@@ -90,9 +93,11 @@ Finally, sets the initialized value:
   delay={100}
 />
 
-// The values like this { email: '', hobby: ['2'] }
-// classNames and values can be initialized in `BasicForm` use `init`
 ```
+
+ * The values like this { email: '', hobby: ['2'] }
+ * classNames and values can be initialized in `BasicForm` use `init`
+ * `delay` debounce
 
 Validate methods can refer to [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
@@ -137,24 +142,25 @@ return (
 | :--- | :--- | :--- | :--- | :--- |
 | values | Object | false | | Key-value pairs for `name` and` value` |
 | classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
-| delay | number | false | | delay |
+| delay | number | false | | debounce |
 
 #### Form params
 
-| name | type | default | setState | description |
+| name | type | return | setState | description |
 | :--- | :--- | :--- | :--- | :--- |
 | fields | Object | | | The collection of fields |
 | isAllValid | Boolean | | | Gets the global validation status |
 | formValues | Object | | | Gets a list of form values |
-| init | function | | false | Initializes the form value and classes |
+| init | function | | this | Initializes the form value and classes |
+| initClassNames | function | this | false | Initializes classes |
 | onFormChange | function | | true | Form change event listener |
-| changeValues | function | | true | Customize to change the values |
-| validate | function | | true | Validate all fields |
-| validateByNames | function | | true | Validate the component through names |
-| addValues | function | | true | Add one or more value |
-| removeValues | function | | true | Remove one or more value |
-| addSchemas | function | | false | Add one or more validation rules |
-| removeSchemas | function | | true | Remove one or more validation rules |
+| changeValues | function | this | true | Customize to change the values |
+| validate | function | Promise => Boolean | true | Validate all fields |
+| validateByNames | function | Promise => Boolean | true | Validate the component through names |
+| addValues | function | this | true | Add one or more value |
+| removeValues | function | this | true | Remove one or more value |
+| addSchemas | function | this | false | Add one or more validation rules |
+| removeSchemas | function | Promise => this | true | Remove one or more validation rules |
 | formDidChange | function | | | Callback |
 
 You can either pass in `values` as an argument, or call the `init` method when the form is initialized.

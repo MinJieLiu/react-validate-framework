@@ -12,6 +12,7 @@ export default {
         'webpack/hot/dev-server',
         'webpack-hot-middleware/client',
       ] : [],
+    'babel-polyfill',
     path.resolve('./example/index'),
   ],
   output: {

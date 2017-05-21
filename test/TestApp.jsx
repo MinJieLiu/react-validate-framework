@@ -4,7 +4,8 @@
 
 /* eslint-disable react/no-multi-comp */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import formConnect, {
   Checkbox,
   Radio,

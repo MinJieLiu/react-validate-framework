@@ -2,7 +2,8 @@
  * Created by MingYi on 2016/12/23.
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   Text,
   Message,
@@ -36,11 +37,9 @@ class ChildForm extends Component {
     });
   };
 
-  handleDeleteFriend = () => {
+  handleDeleteFriend = async () => {
     const { formControl } = this.props;
-    formControl
-      .removeSchemas('friend')
-      .removeValues('friend');
+    (await formControl.removeSchemas('friend')).removeValues('friend');
   };
 
   render() {
@@ -73,19 +72,18 @@ class ChildForm extends Component {
           </button>
         </div>
         {
-          fields.friend
-            ? (
-              <div className="form-group">
-                <label htmlFor="friend">Name:</label>
-                <Text
-                  id="friend"
-                  name="friend"
-                  type="text"
-                  placeholder="Please enter a name"
-                />
-                <Message className="valid-error-message" name="friend" />
-              </div>
-            ) : null
+          fields.friend ? (
+            <div className="form-group">
+              <label htmlFor="friend">Name:</label>
+              <Text
+                id="friend"
+                name="friend"
+                type="text"
+                placeholder="Please enter a name"
+              />
+              <Message className="valid-error-message" name="friend" />
+            </div>
+          ) : null
         }
         <div className="form-group">
           {/* The unencapsulated form components */}
