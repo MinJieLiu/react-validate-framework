@@ -1,10 +1,12 @@
 import React from 'react';
 import Field from '../Field';
 
-export default Object.assign(Field.bind(null, ({ field, ...props }) => (
+const Textarea = Field.bind(null, ({ field, className, ...props }) => (
   <textarea
-    className={field.className}
+    className={[field.className, className].join('\u{20}')}
     value={field.value}
     {...props}
   />
-), 'textarea'), Field);
+), 'textarea');
+
+export default Object.assign(Textarea, Field);

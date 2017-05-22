@@ -1,10 +1,12 @@
 import React from 'react';
 import Field from '../Field';
 
-export default Object.assign(Field.bind(null, ({ field, ...props }) => (
+const Select = Field.bind(null, ({ field, className, ...props }) => (
   <select
-    className={field.className}
+    className={[field.className, className].join('\u{20}')}
     value={field.value}
     {...props}
   />
-), 'select'), Field);
+), 'select');
+
+export default Object.assign(Select, Field);

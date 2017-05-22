@@ -1,11 +1,13 @@
 import React from 'react';
 import Field from '../Field';
 
-export default Object.assign(Field.bind(null, ({ field, ...props }) => (
+const Text = Field.bind(null, ({ field, className, ...props }) => (
   <input
-    className={field.className}
+    className={[field.className, className].join('\u{20}')}
     type="text"
     value={field.value}
     {...props}
   />
-), 'text'), Field);
+), 'text');
+
+export default Object.assign(Text, Field);

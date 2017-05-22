@@ -46,7 +46,6 @@ export default (schemas, methods) => FormComponent => (
         values,
         delay,
       } = props;
-      // delay
 
       if (delay) {
         this.delayValidateField = debounce(this.delayValidateField.bind(this), delay);

@@ -101,6 +101,7 @@ class BasicForm extends Component {
         <div className="form-group">
           <label htmlFor="email">Email:</label>
           <Text
+            className="email"
             id="email"
             name="email"
             type="email"
