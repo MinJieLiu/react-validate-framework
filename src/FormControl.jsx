@@ -338,17 +338,12 @@ export default (schemas, methods) => FormComponent => (
      * Delete one or more validation rules
      * @param names
      */
-    removeSchemas = async (...names) => {
-      const { fields } = this.state;
+    removeSchemas = (...names) => {
       names.forEach((name) => {
         delete this.schemas[name];
       });
       // Validate the deleted status
-      await this.validateFieldsByNames(...names);
-      // Update
-      this.setState({
-        fields,
-      });
+      this.validateByNames(...names);
       return this;
     };
 

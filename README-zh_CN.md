@@ -170,5 +170,5 @@ return (
 | addValues | function | this | true | 添加一个或多个值 |
 | removeValues | function | this | true | 删除一个或多个值 |
 | addSchemas | function | this | false | 添加一个或多个验证规则 |
-| removeSchemas | function | Promise => this | true | 删除一个或多个验证规则 |
+| removeSchemas | function | this | true | 删除一个或多个验证规则 |
 | formDidChange | function | | | 回调函数 |

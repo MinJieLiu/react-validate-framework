@@ -160,7 +160,7 @@ return (
 | addValues | function | this | true | Add one or more value |
 | removeValues | function | this | true | Remove one or more value |
 | addSchemas | function | this | false | Add one or more validation rules |
-| removeSchemas | function | Promise => this | true | Remove one or more validation rules |
+| removeSchemas | function | this | true | Remove one or more validation rules |
 | formDidChange | function | | | Callback |
 
 You can either pass in `values` as an argument, or call the `init` method when the form is initialized.

@@ -37,9 +37,9 @@ class ChildForm extends Component {
     });
   };
 
-  handleDeleteFriend = async () => {
+  handleDeleteFriend = () => {
     const { formControl } = this.props;
-    (await formControl.removeSchemas('friend')).removeValues('friend');
+    formControl.removeSchemas('friend').removeValues('friend');
   };
 
   render() {

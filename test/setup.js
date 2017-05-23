@@ -175,7 +175,8 @@ describe('Test nested forms', () => {
     expect(app.node.formValues.birthday).to.equal('2010-10-10');
     expect(app.node.isAllValid).to.equal(false);
     // removeSchemas
-    await app.node.removeSchemas('phone');
+    app.node.removeSchemas('phone');
+    await sleep(5);
     expect(app.node.isAllValid).to.equal(true);
   });
 
