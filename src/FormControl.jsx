@@ -6,6 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Validator from 'validate-framework-utils';
 import debounce from 'lodash/debounce';
+import noop from 'lodash/noop';
 
 /**
  * React validation component
@@ -91,27 +92,30 @@ export default (schemas, methods) => FormComponent => (
       const { classNames } = this.props;
       const { fields } = this.state;
 
-      Object.keys(values).forEach((name) => {
-        const newValue = values[name];
-        // Validate the new data
-        if (fields[name]) {
-          // diff
-          if (fields[name].value !== newValue) {
-            this.assembleFieldChange(name, newValue)
-              .delayValidateField(name, newValue);
+      (async () => {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const name of Object.keys(values)) {
+          const newValue = values[name];
+          // Validate the new data
+          if (fields[name]) {
+            // diff
+            if (fields[name].value !== newValue) {
+              this.assembleFieldChange(name, newValue);
+              await this.assembleFieldValidate(name, newValue);
+            }
+          } else {
+            // Add a new field
+            fields[name] = {
+              className: classNames.static,
+              value: newValue,
+            };
           }
-        } else {
-          // Add a new field
-          fields[name] = {
-            className: classNames.static,
-            value: newValue,
-          };
         }
-      });
-
-      this.setState({
-        fields,
-      });
+        // Update
+        this.setState({
+          fields,
+        });
+      })();
     }
 
     /**
@@ -402,8 +406,7 @@ export default (schemas, methods) => FormComponent => (
     };
 
     // After change
-    formDidChange = () => {
-    };
+    formDidChange = noop;
 
     render() {
       return (
