@@ -1,6 +1,6 @@
 {
   "name": "react-validate-framework",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "description": "React validation framework.",
   "main": "lib/index.js",
   "scripts": {

@@ -1,24 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const propTypes = {
-  name: PropTypes.string.isRequired,
-  htmlFor: PropTypes.string,
-};
-
-const contextTypes = {
-  fields: PropTypes.object.isRequired,
-};
-
 /**
  * Error message component
  * @param name
  * @param htmlFor
- * @param props
- * @param fields
+ * @param props - Other params
+ * @param fields - ContextType
  * @constructor
  */
-const Message = ({ name, htmlFor, ...props }, { fields }) => (
+const Message = ({ name, htmlFor, ...props }, { formControl: { fields } }) => (
   <label
     htmlFor={htmlFor}
     {...props}
@@ -27,7 +18,13 @@ const Message = ({ name, htmlFor, ...props }, { fields }) => (
   </label>
 );
 
-Message.propTypes = propTypes;
-Message.contextTypes = contextTypes;
+Message.propTypes = {
+  name: PropTypes.string.isRequired,
+  htmlFor: PropTypes.string,
+};
+
+Message.contextTypes = {
+  formControl: PropTypes.object.isRequired,
+};
 
 export default Message;

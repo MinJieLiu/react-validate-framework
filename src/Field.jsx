@@ -4,26 +4,28 @@ import PropTypes from 'prop-types';
 /**
  * Field component
  * @param FormComponent
- * @param fieldType
+ * @param fieldType - Input type
  * @param name
- * @param props
- * @param fields
- * @param initField
- * @param onFormChange
+ * @param props - Other params
+ * @param fields - ContextType
+ * @param init - ContextType
+ * @param onFormChange - ContextType
  * @constructor
  */
 const Field = (FormComponent, fieldType, {
   name,
   ...props
 }, {
-  fields,
-  initField,
-  onFormChange,
+  formControl: {
+    fields,
+    init,
+    onFormChange,
+  },
 }) => {
   // Initialize field.
   if (!fields[name]) {
     // Checkbox uses an array
-    initField({
+    init({
       [name]: fieldType === 'checkbox' ? [] : '',
     });
   }
@@ -42,9 +44,7 @@ Field.propTypes = {
 };
 
 Field.contextTypes = {
-  fields: PropTypes.object.isRequired,
-  initField: PropTypes.func.isRequired,
-  onFormChange: PropTypes.func.isRequired,
+  formControl: PropTypes.object.isRequired,
 };
 
 export default Field;
