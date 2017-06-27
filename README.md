@@ -161,7 +161,7 @@ return (
 | removeValues | function | this | true | Remove one or more value, If there is no name, it will all be removed |
 | resetValues | function | this | true | Reset one or more value, If there is no name, it will all be init |
 | addSchemas | function | this | false | Add one or more validation rules |
-| removeSchemas | function | this | true | Remove one or more validation rules, it will all be removed |
+| removeSchemas | function | this | true | Remove one or more validation rules, If there is no name, it will all be removed |
 | formDidChange | function | | | Callback |
 
 You can either pass in `values` as an argument, or call the `init` method when the form is initialized.
