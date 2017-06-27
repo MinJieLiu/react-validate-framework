@@ -109,6 +109,23 @@ describe('Test Form change validation', () => {
     expect(await app.node.validate()).to.equal(true);
   });
 
+  it('API resetValues executed correctly', async () => {
+    const app = mount(
+      <TestApp3 />,
+    );
+    // change values
+    app.node.changeValues({ sex: '1', city: '1', remarks: 'hello', hobby: ['1'] });
+    expect(await app.node.validateByNames('city', 'remarks')).to.equal(true);
+    expect(await app.node.validate()).to.equal(true);
+    app.node.resetValues('remarks');
+    expect(await app.node.validateByNames('remarks')).to.not.equal(true);
+    expect(await app.node.formValues.remarks).to.be.empty;
+    // reset all
+    app.node.resetValues();
+    expect(await app.node.formValues.hobby.length).to.be.equal(0);
+    expect(await app.node.formValues.city).to.be.empty;
+  });
+
 });
 
 

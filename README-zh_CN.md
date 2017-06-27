@@ -16,6 +16,7 @@ Demo: [https://minjieliu.github.io/react-validate-framework](https://minjieliu.g
  1. 动态的验证
  1. 多表单组合
  1. 自定义规则
+ 1. 基于 `async` 语法，优雅的异步验证
 
 
 ## 开始使用
@@ -168,7 +169,8 @@ return (
 | validate | function | Promise => Boolean | true | 验证所有字段 |
 | validateByNames | function | Promise => Boolean | true | 通过 `name` 验证组件 |
 | addValues | function | this | true | 添加一个或多个值 |
-| removeValues | function | this | true | 删除一个或多个值 |
+| removeValues | function | this | true | 删除一个或多个值，无参数则删除所有 |
+| resetValues | function | this | true | 重置一个或多个值，无参数则重置所有 |
 | addSchemas | function | this | false | 添加一个或多个验证规则 |
-| removeSchemas | function | this | true | 删除一个或多个验证规则 |
-| formDidChange | function | | | 回调函数 |
+| removeSchemas | function | this | true | 删除一个或多个验证规则，无参数则删除所有 |
+| formDidChange | function | | | 表单改变回调 |

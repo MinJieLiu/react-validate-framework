@@ -38,6 +38,9 @@ export default (schemas, methods) => FormComponent => (
 
     schemas = Object.assign({}, schemas);
 
+    // Original
+    originalValues = {};
+
     constructor(props) {
       super(props);
       const {
@@ -141,7 +144,8 @@ export default (schemas, methods) => FormComponent => (
      */
     get isAllValid() {
       const { fields } = this.state;
-      return Object.keys(this.schemas)
+      return Object
+        .keys(this.schemas)
         .every(name => fields[name] && fields[name].result);
     }
 
@@ -161,6 +165,10 @@ export default (schemas, methods) => FormComponent => (
           className: this.props.classNames.static,
           value,
         };
+        // Only initialized once
+        if (this.originalValues[name] === undefined) {
+          this.originalValues[name] = value;
+        }
         // Synchronize values external state
         if (this.props.values) {
           this.props.values[name] = value;
@@ -304,7 +312,7 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
-      this.formDidChange();
+      this.formDidChange({ [name]: theValue });
     };
 
     /**
@@ -321,7 +329,7 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
-      this.formDidChange();
+      this.formDidChange(values);
       return this;
     };
 
@@ -336,12 +344,17 @@ export default (schemas, methods) => FormComponent => (
 
     /**
      * Delete one or more validation rules
+     * If there is no name, it will all be removed.
      * @param names
      */
     removeSchemas = (...names) => {
-      names.forEach((name) => {
-        delete this.schemas[name];
-      });
+      if (names.length) {
+        names.forEach((name) => {
+          delete this.schemas[name];
+        });
+      } else {
+        this.schemas = {};
+      }
       // Validate the deleted status
       this.validateByNames(...names);
       return this;
@@ -359,24 +372,62 @@ export default (schemas, methods) => FormComponent => (
       this.setState({
         fields,
       });
-      this.formDidChange();
+      this.formDidChange(values);
       return this;
     };
 
     /**
      * Deletes one or more fields
+     * If there is no name, it will all be removed.
      * @param names
      */
     removeValues = (...names) => {
       const { fields } = this.state;
-      names.forEach((name) => {
-        delete fields[name];
-      });
+      if (names.length) {
+        names.forEach((name) => {
+          delete fields[name];
+          if (this.props.values) {
+            delete this.props.values[name];
+          }
+        });
+      } else {
+        // Remove all
+        this.state.fields = {};
+        if (this.props.values) {
+          this.props.values = {};
+        }
+      }
       // Update
       this.setState({
         fields,
       });
-      this.formDidChange();
+      this.formDidChange({});
+      return this;
+    };
+
+    /**
+     * Reset one or more fields
+     * If there is no name, it will all be init.
+     * @param names
+     */
+    resetValues = (...names) => {
+      const { fields } = this.state;
+      const values = {};
+      if (names.length) {
+        names.forEach((name) => {
+          values[name] = this.originalValues[name];
+        });
+        this.init(values);
+      } else {
+        // Init all
+        Object.assign(values, this.originalValues);
+        this.init(values);
+      }
+      // Update
+      this.setState({
+        fields,
+      });
+      this.formDidChange(values);
       return this;
     };
 
@@ -395,7 +446,10 @@ export default (schemas, methods) => FormComponent => (
       return result;
     };
 
-    // Validate all
+    /**
+     * Validate all
+     * @return {Boolean}
+     */
     validate = () => {
       const names = Object.keys(this.schemas);
       return this.validateByNames(...names);
