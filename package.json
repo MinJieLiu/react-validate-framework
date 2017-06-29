@@ -1,12 +1,13 @@
 {
   "name": "react-validate-framework",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "React validation framework.",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src config example --ext .js,.jsx --fix",
     "start": "better-npm-run start",
-    "test": "mocha --compilers js:babel-core/register --colors ./test/setup.js",
+    "test": "nyc mocha --compilers js:babel-core/register --colors ./test/setup.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build:example": "rimraf build && better-npm-run build:example",
     "deploy": "rimraf lib && better-npm-run prod"
   },
@@ -66,6 +67,7 @@
     "better-npm-run": "0.0.13",
     "chai": "^3.5.0",
     "classnames": "^2.2.5",
+    "coveralls": "^2.13.1",
     "css-loader": "^0.26.1",
     "debug": "^2.5.1",
     "enzyme": "^2.8.2",
@@ -80,6 +82,7 @@
     "jsdom": "^9.11.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.1.1",
+    "nyc": "^11.0.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-test-renderer": "^15.5.4",

@@ -3,4 +3,6 @@
 node_modules
 /build
 /example
+coverage
+.nyc_output
 .idea/
