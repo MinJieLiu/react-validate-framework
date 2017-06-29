@@ -1,12 +1,12 @@
 {
   "name": "react-validate-framework",
-  "version": "0.14.1",
+  "version": "0.14.2",
   "description": "React validation framework.",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src config example --ext .js,.jsx --fix",
     "start": "better-npm-run start",
-    "test": "nyc mocha --compilers js:babel-core/register --colors ./test/setup.js",
+    "test": "better-npm-run test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build:example": "rimraf build && better-npm-run build:example",
     "deploy": "rimraf lib && better-npm-run prod"
@@ -16,6 +16,13 @@
       "command": "babel-node config/server.dev.js",
       "env": {
         "NODE_ENV": "development",
+        "DEBUG": "app:*"
+      }
+    },
+    "test": {
+      "command": "nyc mocha ./test/setup.js",
+      "env": {
+        "NODE_ENV": "test",
         "DEBUG": "app:*"
       }
     },
@@ -50,6 +57,13 @@
     "url": "https://github.com/MinJieLiu/react-validate-framework/issues"
   },
   "homepage": "https://github.com/MinJieLiu/react-validate-framework#readme",
+  "nyc": {
+    "require": [
+      "babel-register"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
   "dependencies": {
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
@@ -60,6 +74,7 @@
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
+    "babel-plugin-istanbul": "^4.1.4",
     "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
