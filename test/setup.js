@@ -148,6 +148,8 @@ describe('Test all types of forms', () => {
     expect(app.node.formValues.hobby.indexOf('2') !== -1).to.equal(true);
     app.find('#hobby3').simulate('change');
     expect(app.node.formValues.hobby.indexOf('3') !== -1).to.equal(true);
+    app.find('#hobby3').simulate('change');
+    expect(app.node.formValues.hobby.indexOf('3') === -1).to.equal(true);
     app.find('#sex2').simulate('change');
     expect(app.node.formValues.sex).to.equal('2');
     app.find('select').get('0').value = '1';
@@ -157,6 +159,71 @@ describe('Test all types of forms', () => {
     app.find('#remarks').simulate('change');
     expect(app.node.formValues.remarks).to.equal('abc');
     expect(await app.node.validate()).to.equal(true);
+  });
+
+  it('The Wrap data is correctly', async () => {
+    class WrapTest extends React.Component {
+      state = {
+        globalValues: {
+          hobby: ['1'],
+          city: 1,
+          other: 1,
+          dog: 5,
+        },
+      };
+
+      handleChangeValues = () => {
+        this.setState({
+          globalValues: {
+            ...this.state.globalValues,
+            city: 2,
+            money: 1000,
+          },
+        });
+      };
+
+      render() {
+        return (
+          <div>
+            <button id="changeButton" onClick={this.handleChangeValues}>click</button>
+            <TestApp3
+              classNames={{
+                static: 'form-control',
+                success: 'valid-success',
+                error: 'valid-error',
+              }}
+              values={this.state.globalValues}
+            />
+          </div>
+        );
+      }
+    }
+    const wrapper = mount(
+      <WrapTest />,
+    );
+    const app = wrapper.find(TestApp3);
+    expect(app.node.formValues.city).to.equal('1');
+    // number
+    app.node.init({ love: 520 });
+    expect(app.node.fields.love.value).to.equal('520');
+
+    // change
+    wrapper.find('#changeButton').simulate('click');
+    await sleep(5);
+    expect(app.node.formValues.city).to.equal('2');
+    expect(app.node.fields.money.value).to.equal('1000');
+
+    // removeValues
+    app.node.removeValues('love', 'money');
+    expect(app.node.fields.love).to.equal(undefined);
+    expect(app.node.fields.money).to.equal(undefined);
+    expect(app.node.formValues.city).to.not.be.empty;
+    // remove all others
+    app.node.removeValues();
+    expect(app.node.fields.other).to.be.empty;
+    expect(app.node.fields.dog).to.be.empty;
+    expect(wrapper.node.state.globalValues.other).to.be.empty;
+    expect(wrapper.node.state.globalValues.dog).to.be.empty;
   });
 
 });

@@ -6,6 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Validator from 'validate-framework-utils';
 import debounce from 'lodash/debounce';
+import isNumber from 'lodash/isNumber';
 import noop from 'lodash/noop';
 
 /**
@@ -53,26 +54,18 @@ export default (schemas, methods) => FormComponent => (
         this.delayValidateField = debounce(this.delayValidateField.bind(this), delay);
       }
 
-      const fields = {};
-      // Assemble the initialization data into fields
-      if (values) {
-        Object.keys(values).forEach((name) => {
-          fields[name] = {
-            className: classNames.static,
-            value: values[name],
-          };
-        });
-      }
-
       this.state = {
-        fields,
+        fields: {},
       };
+
+      // Init
+      if (values) {
+        this.init(values, classNames);
+      }
 
       // Initializes the validation component and customizes the validation method
       this.validator = new Validator();
-      Object.assign(this.validator, methods, {
-        fields,
-      });
+      Object.assign(this.validator, methods, { fields: this.state.fields });
     }
 
     getChildContext() {
@@ -94,19 +87,21 @@ export default (schemas, methods) => FormComponent => (
       (async () => {
         // eslint-disable-next-line no-restricted-syntax
         for (const name of Object.keys(values)) {
-          const newValue = values[name];
+          const theValue = values[name];
+          // Convert to string
+          const value = isNumber(theValue) ? String(theValue) : theValue;
           // Validate the new data
           if (fields[name]) {
             // diff
-            if (fields[name].value !== newValue) {
-              this.assembleFieldChange(name, newValue);
-              await this.assembleFieldValidate(name, newValue);
+            if (fields[name].value !== value) {
+              this.assembleFieldChange(name, value);
+              await this.assembleFieldValidate(name, value);
             }
           } else {
             // Add a new field
             fields[name] = {
               className: classNames.static,
-              value: newValue,
+              value,
             };
           }
         }
@@ -157,10 +152,14 @@ export default (schemas, methods) => FormComponent => (
     init = (values, classes) => {
       const { fields } = this.state;
       // Assign classNames
-      this.initClassNames(classes);
+      if (classes) {
+        this.initClassNames(classes);
+      }
       // Initialize
       Object.keys(values).forEach((name) => {
-        const value = values[name];
+        const theValue = values[name];
+        // Convert to string
+        const value = isNumber(theValue) ? String(theValue) : theValue;
         fields[name] = {
           className: this.props.classNames.static,
           value,
@@ -392,10 +391,12 @@ export default (schemas, methods) => FormComponent => (
         });
       } else {
         // Remove all
-        this.state.fields = {};
-        if (this.props.values) {
-          this.props.values = {};
-        }
+        Object.keys(fields).forEach((name) => {
+          delete this.state.fields[name];
+          if (this.props.values) {
+            delete this.props.values[name];
+          }
+        });
       }
       // Update
       this.setState({
