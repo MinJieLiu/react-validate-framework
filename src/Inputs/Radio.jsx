@@ -1,7 +1,7 @@
 import React from 'react';
-import Field from '../Field';
+import createField from '../createField';
 
-const Radio = Field.bind(null, ({ field, value, ...props }) => (
+export default createField(({ field, value, ...props }) => (
   <input
     value={value}
     checked={field.value === value}
@@ -9,5 +9,3 @@ const Radio = Field.bind(null, ({ field, value, ...props }) => (
     type="radio"
   />
 ), 'radio');
-
-export default Object.assign(Radio, Field);

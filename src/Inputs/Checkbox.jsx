@@ -1,7 +1,7 @@
 import React from 'react';
-import Field from '../Field';
+import createField from '../createField';
 
-const Checkbox = Field.bind(null, ({ field, value, ...props }) => (
+export default createField(({ field, value, ...props }) => (
   <input
     value={value}
     checked={field.value.indexOf(value) !== -1}
@@ -9,5 +9,3 @@ const Checkbox = Field.bind(null, ({ field, value, ...props }) => (
     type="checkbox"
   />
 ), 'checkbox');
-
-export default Object.assign(Checkbox, Field);

@@ -1,6 +1,6 @@
 {
   "name": "react-validate-framework",
-  "version": "0.14.5",
+  "version": "0.15",
   "description": "React validation framework.",
   "main": "lib/index.js",
   "scripts": {
@@ -65,7 +65,8 @@
     "instrument": false
   },
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash.debounce": "^4.0.8",
+    "lodash.isnumber": "^3.0.3",
     "prop-types": "^15.5.10",
     "validate-framework-utils": "^0.3.4"
   },
@@ -110,7 +111,7 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
-    "react": "0.14.x || 15.x",
-    "react-dom": "0.14.x || 15.x"
+    "react": "15.x || 16.x",
+    "react-dom": "15.x || 16.x"
   }
 }
