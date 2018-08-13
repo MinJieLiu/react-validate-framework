@@ -1,6 +1,6 @@
 {
   "name": "react-validate-framework",
-  "version": "0.15",
+  "version": "0.15.1",
   "description": "React validation framework.",
   "main": "lib/index.js",
   "scripts": {
@@ -68,7 +68,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.isnumber": "^3.0.3",
     "prop-types": "^15.5.10",
-    "validate-framework-utils": "^0.3.4"
+    "validate-framework-utils": "^0.6.1"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

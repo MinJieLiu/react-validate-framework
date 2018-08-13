@@ -69,8 +69,10 @@ const BasicForm = () => (
     <Text
       name="email"
       placeholder="Please input your email"
+      delay={100} // Asynchronous validation
     />
     <Message className="valid-error-message" name="email" />
+    <Text name="phone" />
   </div>
 );
 ```
@@ -91,14 +93,12 @@ Finally, sets the initialized value:
     error: 'valid-error',
   }}
   values={this.state.formValues}
-  delay={100}
 />
 
 ```
 
  * The values like this { email: '', hobby: ['2'] }
  * classNames and values can be initialized in `BasicForm` use `init`
- * `delay` debounce
 
 Validate methods can refer to [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
@@ -111,7 +111,7 @@ Validate methods can refer to [validate-framework-utils](https://github.com/MinJ
  * `Textarea`
  * `Message`
 
-The `name` attribute is required in form components, Other parameters can be overridden.
+The `name` attribute is required in form components, `delay` debounce, Other parameters can be overridden.
 
 Of course, you can also use unencapsulated form components, just specify `value` and` onChange` on the line:
 
@@ -143,7 +143,6 @@ return (
 | :--- | :--- | :--- | :--- | :--- |
 | values | Object | false | | Key-value pairs for `name` and` value` |
 | classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
-| delay | number | false | | debounce |
 
 #### Form params
 

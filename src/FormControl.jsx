@@ -33,7 +33,7 @@ export default (schemas, methods) => FormComponent => (
       classNames: {},
     };
 
-    schemas = Object.assign({}, schemas);
+    schemas = { ...schemas };
 
     // Original
     originalValues = {};
@@ -85,8 +85,7 @@ export default (schemas, methods) => FormComponent => (
           if (fields[name]) {
             // diff
             if (fields[name].value !== value) {
-              this.assembleFieldChange(name, value);
-              await this.assembleFieldValidate(name, value);
+              await this.handleAssembleFieldChange(name, value);
             }
           } else {
             // Add a new field
@@ -178,18 +177,35 @@ export default (schemas, methods) => FormComponent => (
     };
 
     /**
+     * Create asynchronous validation
+     * See createField.jsx
+     * @param ms
+     * @return {Function}
+     */
+    handleCreateDelayValidateFunc = (ms) => {
+      const debounceValidateAndUpdate = async (...args) => {
+        await this.handleAssembleFieldValidate(...args);
+        this.forceUpdate();
+      };
+      return debounce(debounceValidateAndUpdate, ms);
+    };
+
+    /**
      * Assemble the data
      * This method is not operational
      * @param name
      * @param value
      * @return {FormControl}
      */
-    assembleFieldChange = async (name, value) => {
+    handleAssembleFieldChange = async (name, value) => {
       const { fields } = this.state;
       fields[name].value = value;
-      // Assemble
-      await this.assembleFieldValidate(name, value);
-      return this;
+      // Async
+      if (fields[name].delayFunc) {
+        fields[name].delayFunc(name, value);
+      } else {
+        await this.handleAssembleFieldValidate(name, value);
+      }
     };
 
     /**
@@ -199,13 +215,13 @@ export default (schemas, methods) => FormComponent => (
      * @param value
      * @return {FormControl}
      */
-    assembleFieldValidate = async (name, value) => {
+    handleAssembleFieldValidate = async (name, value) => {
       const { classNames } = this.props;
       const { fields } = this.state;
       // No schema is not to validate
-      const schema = this.schemas[name] && Object.assign(this.schemas[name], { value });
+      const schema = this.schemas[name];
       const { result, error } = schema
-        ? await this.validator.validateByField(schema)
+        ? await this.validator.validateField(schema)(value)
         : {};
 
       // Assembly class name
@@ -230,10 +246,10 @@ export default (schemas, methods) => FormComponent => (
      * @param value
      * @return {Boolean}
      */
-    validateField = async (name, value) => {
+    handleValidateField = async (name, value) => {
       const { fields } = this.state;
       // Assemble
-      await this.assembleFieldValidate(name, value);
+      await this.handleAssembleFieldValidate(name, value);
       return fields[name].result;
     };
 
@@ -247,7 +263,7 @@ export default (schemas, methods) => FormComponent => (
       let isValid = true;
       // eslint-disable-next-line no-restricted-syntax
       for (const name of names) {
-        const result = fields[name] && await this.validateField(name, fields[name].value);
+        const result = fields[name] && await this.handleValidateField(name, fields[name].value);
         // Exclude unauthenticated and validated successfully
         if (result === false) {
           isValid = false;
@@ -257,7 +273,7 @@ export default (schemas, methods) => FormComponent => (
     };
 
     // Form change event listener
-    onFormChange = (e) => {
+    onFormChange = async (e) => {
       const { name, type, value } = e.target;
       const { fields } = this.state;
 
@@ -284,7 +300,7 @@ export default (schemas, methods) => FormComponent => (
         this.props.values[name] = theValue;
       }
       // Assemble and delay validate
-      this.assembleFieldChange(name, theValue);
+      await this.handleAssembleFieldChange(name, theValue);
       // Update
       this.setState({
         fields,
@@ -296,11 +312,13 @@ export default (schemas, methods) => FormComponent => (
      * Customize to change the values
      * @param values
      */
-    changeValues = (values) => {
+    changeValues = async (values) => {
       const { fields } = this.state;
       // Initializes
       this.init(values);
-      Object.keys(values).forEach(name => this.assembleFieldChange(name, values[name]));
+      await Promise.all(
+        Object.keys(values).map(name => this.handleAssembleFieldChange(name, values[name])),
+      );
       // Update
       this.setState({
         fields,
@@ -326,7 +344,7 @@ export default (schemas, methods) => FormComponent => (
     removeSchemas = (...names) => {
       if (names.length) {
         names.forEach((name) => {
-          this.schemas[name] = undefined;
+          delete this.schemas[name];
         });
       } else {
         this.schemas = {};
@@ -361,17 +379,17 @@ export default (schemas, methods) => FormComponent => (
       const { fields } = this.state;
       if (names.length) {
         names.forEach((name) => {
-          fields[name] = undefined;
+          delete fields[name];
           if (this.props.values) {
-            this.props.values[name] = undefined;
+            delete this.props.values[name];
           }
         });
       } else {
         // Remove all
         Object.keys(fields).forEach((name) => {
-          this.state.fields[name] = undefined;
+          delete this.state.fields[name];
           if (this.props.values) {
-            this.props.values[name] = undefined;
+            delete this.props.values[name];
           }
         });
       }

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
  * @param fieldType
  * @constructor
  */
-export default (FormComponent, fieldType) => class Field extends React.Component {
+export default (FormComponent, fieldType) => class Field extends React.Component { // eslint-disable-line
 
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -18,15 +18,20 @@ export default (FormComponent, fieldType) => class Field extends React.Component
     formControl: PropTypes.object.isRequired,
   };
 
-  constructor(props, context) {
-    super(props, context);
+  render() {
+    const {
+      name,
+      delay, // eslint-disable-line
+      ...props
+    } = this.props;
     const {
       formControl: {
         fields,
         init,
+        handleCreateDelayValidateFunc,
+        onFormChange,
       },
-    } = context;
-    const { name, delay } = props;
+    } = this.context;
 
     // Initialize field.
     if (!fields[name]) {
@@ -36,25 +41,16 @@ export default (FormComponent, fieldType) => class Field extends React.Component
       });
     }
 
-    // delay
-    if (delay) {
-      fields[name].delay = delay;
+    // Async
+    if (delay && !fields[name].delayFunc) {
+      fields[name].delayFunc = handleCreateDelayValidateFunc(delay);
     }
-  }
-
-  render() {
-    const {
-      name,
-      delay, // eslint-disable-line
-      ...props
-    } = this.props;
-    const { formControl } = this.context;
 
     return (
       <FormComponent
         name={name}
-        field={formControl.fields[name]}
-        onChange={formControl.onFormChange}
+        field={fields[name]}
+        onChange={onFormChange}
         {...props}
       />
     );

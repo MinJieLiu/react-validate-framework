@@ -1,7 +1,3 @@
-/**
- * Created by MingYi on 2016/12/23.
- */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -19,8 +15,8 @@ import ChildForm from './ChildForm';
 // Rules and messages
 const schemas = {
   email: {
-    rules: 'required | isEmail | maxLength(32)',
-    messages: 'Can not be empty! | Please enter a valid email address. | Can not exceed {{param}} characters.',
+    rules: 'required | isEmail | maxLength(32) | remoteRule',
+    messages: 'Can not be empty! | Please enter a valid email address. | Can not exceed {{param}} characters. | The email already exists',
   },
   phone: {
     rules: 'isPhone',
@@ -65,6 +61,13 @@ const methods = {
     const otherField = this.fields[param];
     return this.required(field) || (otherField.result && this.required(otherField));
   },
+  async remoteRule(field) {
+    await sleep(1000);
+    if (field.value) {
+      return field.value !== 'example@example.com';
+    }
+    return false;
+  },
   async selectLimit(field, param) {
     // Simulation
     await sleep(1000);
@@ -106,6 +109,7 @@ class BasicForm extends Component {
             name="email"
             type="email"
             placeholder="Please input your email"
+            delay={200}
           />
           <Message className="valid-error-message" name="email" />
         </div>
@@ -181,6 +185,7 @@ class BasicForm extends Component {
                 id="hobby1"
                 name="hobby"
                 value="1"
+                delay={200}
               />
               hobby1
             </label>
@@ -189,6 +194,7 @@ class BasicForm extends Component {
                 id="hobby2"
                 name="hobby"
                 value="2"
+                delay={200}
               />
               hobby2
             </label>
@@ -197,6 +203,7 @@ class BasicForm extends Component {
                 id="hobby3"
                 name="hobby"
                 value="3"
+                delay={200}
               />
               hobby3
             </label>
@@ -205,6 +212,7 @@ class BasicForm extends Component {
                 id="hobby4"
                 name="hobby"
                 value="4"
+                delay={200}
               />
               hobby4
             </label>

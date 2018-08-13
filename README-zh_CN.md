@@ -102,14 +102,12 @@ export default formConnect(schemas, methods)(BasicForm);
     error: 'valid-error',
   }}
   values={this.state.formValues}
-  delay={100}
 />
 ```
 
 
  * `values` 的值类似于 { email: '', hobby: ['2'] }
  * `classNames` 和 `values` 也可以在 `BasicForm` 中使用 `init` 方法初始化
- * `delay` 防抖
 
 基础验证方法可以参考 [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
@@ -122,7 +120,7 @@ export default formConnect(schemas, methods)(BasicForm);
  * `Textarea`
  * `Message`
 
-表单 `name` 属性是必需的，其他参数可以被覆盖。
+表单域 `name` 属性是必需的，`delay` 为验证防抖，其他参数可以被覆盖。
 
 当然，你也可以使用自定义的表单受控组件，只需指定 `value` 和 `onChange`：
 
@@ -154,7 +152,6 @@ return (
 | :--- | :--- | :--- | :--- | :--- |
 | values | Object | false | | `values` 集合 |
 | classNames | Object | false | {} | 其 key 值包含 `static`，`success`，`error` 三种类名 |
-| delay | number | false | | 验证防抖 |
 
 #### Form params
 
