@@ -5146,9 +5146,9 @@ v8flags@^2.0.10:
   dependencies:
     user-home "^1.1.1"
 
-validate-framework-utils@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/validate-framework-utils/-/validate-framework-utils-0.6.1.tgz#2d3b984efe33f895676ea1ddbd52d7a0892083e3"
+validate-framework-utils@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/validate-framework-utils/-/validate-framework-utils-0.6.2.tgz#0e850868b8c6f0bf3b9d20bd89b97d5fbcaccaea"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.1"

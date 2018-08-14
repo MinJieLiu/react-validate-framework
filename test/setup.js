@@ -13,6 +13,7 @@ import {
   TestApp2,
   TestApp3,
   TestApp4,
+  TestApp5,
 } from './TestApp';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -261,6 +262,41 @@ describe('Test nested forms', () => {
     // removeSchemas
     app.node.removeSchemas('phone');
     await sleep(5);
+    expect(app.node.isAllValid).to.equal(true);
+  });
+
+});
+
+describe('Test Asynchronous forms', () => {
+
+  it('The Asynchronous form is rendered correctly', () => {
+    const app = mount(
+      <TestApp5 />,
+    );
+    const username = app.find('#username');
+    expect(username.props().name).to.equal('username');
+    expect(username.props().className).to.contains(' ');
+    expect(app.node.fields).to.have.property('username');
+    expect(app.node.fields.username).to.have.property('delayFunc');
+    expect(app.node.schemas).to.have.property('username');
+  });
+
+  it('The Asynchronous form is changed correctly', async () => {
+    const app = mount(
+      <TestApp5 />,
+    );
+    const username = app.find('#username');
+    // change
+    username.get('0').value = '123456';
+    username.simulate('change');
+    await sleep(5);
+    expect(app.find('#usernameMessage').text()).to.equal('');
+    await sleep(1205);
+    expect(app.find('#usernameMessage').text()).to.equal('The username already exists.');
+    // change
+    app.node.changeValues({ username: '1234567' });
+    expect(app.node.formValues.username).to.equal('1234567');
+    await sleep(1205);
     expect(app.node.isAllValid).to.equal(true);
   });
 

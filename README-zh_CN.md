@@ -172,3 +172,10 @@ return (
 | addSchemas | function | this | false | 添加一个或多个验证规则 |
 | removeSchemas | function | this | true | 删除一个或多个验证规则，无参数则删除所有 |
 | formDidChange | function | | | 表单改变回调 |
+
+### 更新日志
+
+0.15.x
+
+ * 移除 `FormControl` 中的 `delay` 参数
+ * 表单组件的 `props` 中添加 `delay` 参数

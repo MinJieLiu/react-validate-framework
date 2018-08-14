@@ -15,6 +15,8 @@ import formConnect, {
   Message,
 } from '../src';
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 
 export const TestApp1 = formConnect()(() => (
   <Text name="email" id="email" />
@@ -137,6 +139,33 @@ export const TestApp4 = formConnect({
             <Message name="phone" id="phoneMessage" />
           </section>
           <TestChildApp {...this.props} />
+        </div>
+      );
+    }
+  },
+);
+
+export const TestApp5 = formConnect({
+  username: {
+    rules: 'remoteRule',
+    messages: 'The username already exists.',
+  },
+}, {
+  async remoteRule(field) {
+    await sleep(1000);
+    if (field.value) {
+      return field.value !== '123456';
+    }
+    return false;
+  },
+})(
+  class extends Component { // eslint-disable-line
+
+    render() {
+      return (
+        <div>
+          <Text name="username" id="username" delay={200} />
+          <Message name="username" id="usernameMessage" />
         </div>
       );
     }

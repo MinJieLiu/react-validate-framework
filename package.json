@@ -1,6 +1,6 @@
 {
   "name": "react-validate-framework",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "React validation framework.",
   "main": "lib/index.js",
   "scripts": {
@@ -20,7 +20,7 @@
       }
     },
     "test": {
-      "command": "nyc mocha ./test/setup.js",
+      "command": "nyc mocha --timeout 10000 ./test/setup.js",
       "env": {
         "NODE_ENV": "test",
         "DEBUG": "app:*"
@@ -68,7 +68,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.isnumber": "^3.0.3",
     "prop-types": "^15.5.10",
-    "validate-framework-utils": "^0.6.1"
+    "validate-framework-utils": "^0.6.2"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

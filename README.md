@@ -167,3 +167,10 @@ return (
 You can either pass in `values` as an argument, or call the `init` method when the form is initialized.
 
 You can invoke the `changeValues` method to simulate a form change event.
+
+### Update log
+
+0.15.x
+
+ * Remove the `delay` parameter from `FormControl`.
+ * Add the `delay` parameter to the `props` of the form component.

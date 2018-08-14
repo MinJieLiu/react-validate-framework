@@ -221,7 +221,7 @@ export default (schemas, methods) => FormComponent => (
       // No schema is not to validate
       const schema = this.schemas[name];
       const { result, error } = schema
-        ? await this.validator.validateField(schema)(value)
+        ? await this.validator.validateField({ ...schema, name })(value)
         : {};
 
       // Assembly class name
