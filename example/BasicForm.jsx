@@ -68,9 +68,7 @@ const methods = {
     }
     return false;
   },
-  async selectLimit(field, param) {
-    // Simulation
-    await sleep(1000);
+  selectLimit(field, param) {
     if (Array.isArray(field.value)) {
       return field.value.length >= param;
     }
@@ -185,7 +183,6 @@ class BasicForm extends Component {
                 id="hobby1"
                 name="hobby"
                 value="1"
-                delay={200}
               />
               hobby1
             </label>
@@ -194,7 +191,6 @@ class BasicForm extends Component {
                 id="hobby2"
                 name="hobby"
                 value="2"
-                delay={200}
               />
               hobby2
             </label>
@@ -203,7 +199,6 @@ class BasicForm extends Component {
                 id="hobby3"
                 name="hobby"
                 value="3"
-                delay={200}
               />
               hobby3
             </label>
@@ -212,7 +207,6 @@ class BasicForm extends Component {
                 id="hobby4"
                 name="hobby"
                 value="4"
-                delay={200}
               />
               hobby4
             </label>

@@ -8,6 +8,17 @@ import Validator from 'validate-framework-utils';
 import debounce from 'lodash.debounce';
 import isNumber from 'lodash.isnumber';
 
+const ORIGINAL_VALUES = Symbol('#ORIGINAL_VALUES');
+
+const GET_RESULT_FROM_SCHEMA = Symbol('#GET_RESULT_FROM_SCHEMA');
+const ASSEMBLE_FIELD_FROM_RESULT = Symbol('#ASSEMBLE_FIELD_FROM_RESULT');
+
+const ASSEMBLE_FIELD_CHANGE = Symbol('#ASSEMBLE_FIELD_CHANGE');
+const ASYNC_ASSEMBLE_FIELD_CHANGE = Symbol('#ASYNC_ASSEMBLE_FIELD_CHANGE');
+
+const ASSEMBLE_FIELD_VALIDATE = Symbol('#ASSEMBLE_FIELD_VALIDATE');
+const ASYNC_ASSEMBLE_FIELD_VALIDATE = Symbol('#ASYNC_ASSEMBLE_FIELD_VALIDATE');
+
 /**
  * React validation component
  * @param schemas
@@ -35,8 +46,7 @@ export default (schemas, methods) => FormComponent => (
 
     schemas = { ...schemas };
 
-    // Original
-    originalValues = {};
+    [ORIGINAL_VALUES] = {};
 
     constructor(props) {
       super(props);
@@ -85,7 +95,7 @@ export default (schemas, methods) => FormComponent => (
           if (fields[name]) {
             // diff
             if (fields[name].value !== value) {
-              await this.handleAssembleFieldChange(name, value);
+              await this[ASYNC_ASSEMBLE_FIELD_CHANGE](name, value);
             }
           } else {
             // Add a new field
@@ -155,8 +165,8 @@ export default (schemas, methods) => FormComponent => (
           value,
         };
         // Only initialized once
-        if (this.originalValues[name] === undefined) {
-          this.originalValues[name] = value;
+        if (this[ORIGINAL_VALUES][name] === undefined) {
+          this[ORIGINAL_VALUES][name] = value;
         }
         // Synchronize values external state
         if (this.props.values) {
@@ -182,50 +192,39 @@ export default (schemas, methods) => FormComponent => (
      * @param ms
      * @return {Function}
      */
-    handleCreateDelayValidateFunc = (ms) => {
+    createDelayValidateFunc = (ms) => {
       const debounceValidateAndUpdate = async (...args) => {
-        await this.handleAssembleFieldValidate(...args);
+        await this[ASYNC_ASSEMBLE_FIELD_VALIDATE](...args);
         this.forceUpdate();
       };
       return debounce(debounceValidateAndUpdate, ms);
     };
 
-    /**
-     * Assemble the data
-     * This method is not operational
-     * @param name
-     * @param value
-     * @return {FormControl}
-     */
-    handleAssembleFieldChange = async (name, value) => {
+    [ASSEMBLE_FIELD_CHANGE] = (name, value) => {
       const { fields } = this.state;
       fields[name].value = value;
       // Async
       if (fields[name].delayFunc) {
         fields[name].delayFunc(name, value);
       } else {
-        await this.handleAssembleFieldValidate(name, value);
+        this[ASSEMBLE_FIELD_VALIDATE](name, value);
       }
     };
 
-    /**
-     * Validate the data
-     * This method is not operational
-     * @param name
-     * @param value
-     * @return {FormControl}
-     */
-    handleAssembleFieldValidate = async (name, value) => {
+    [ASYNC_ASSEMBLE_FIELD_CHANGE] = async (name, value) => {
+      this.state.fields[name].value = value;
+      await this[ASYNC_ASSEMBLE_FIELD_VALIDATE](name, value);
+    };
+
+    [GET_RESULT_FROM_SCHEMA] = (name, value) => {
+      const schema = this.schemas[name];
+      return schema ? this.validator.validateField({ ...schema, name })(value) : {};
+    };
+
+    [ASSEMBLE_FIELD_FROM_RESULT] = (name, { result, error }) => {
       const { classNames } = this.props;
       const { fields } = this.state;
-      // No schema is not to validate
-      const schema = this.schemas[name];
-      const { result, error } = schema
-        ? await this.validator.validateField({ ...schema, name })(value)
-        : {};
 
-      // Assembly class name
-      // Validation success and validation failure Add the appropriate class
       const classNameArray = [
         classNames.static,
         result ? classNames.success : null,
@@ -237,20 +236,16 @@ export default (schemas, methods) => FormComponent => (
         result,
         message: error ? error.message : undefined,
       });
-      return this;
     };
 
-    /**
-     * Validate a single field
-     * @param name
-     * @param value
-     * @return {Boolean}
-     */
-    handleValidateField = async (name, value) => {
-      const { fields } = this.state;
-      // Assemble
-      await this.handleAssembleFieldValidate(name, value);
-      return fields[name].result;
+    [ASSEMBLE_FIELD_VALIDATE] = (name, value) => {
+      const resultField = this[GET_RESULT_FROM_SCHEMA](name, value);
+      this[ASSEMBLE_FIELD_FROM_RESULT](name, resultField);
+    };
+
+    [ASYNC_ASSEMBLE_FIELD_VALIDATE] = async (name, value) => {
+      const resultField = await this[GET_RESULT_FROM_SCHEMA](name, value);
+      this[ASSEMBLE_FIELD_FROM_RESULT](name, resultField);
     };
 
     /**
@@ -263,17 +258,20 @@ export default (schemas, methods) => FormComponent => (
       let isValid = true;
       // eslint-disable-next-line no-restricted-syntax
       for (const name of names) {
-        const result = fields[name] && await this.handleValidateField(name, fields[name].value);
-        // Exclude unauthenticated and validated successfully
-        if (result === false) {
-          isValid = false;
+        if (fields[name]) {
+          await this[ASYNC_ASSEMBLE_FIELD_VALIDATE](name, fields[name].value);
+
+          // Exclude unauthenticated and validated successfully
+          if (fields[name].result === false) {
+            isValid = false;
+          }
         }
       }
       return isValid;
     };
 
     // Form change event listener
-    onFormChange = async (e) => {
+    onFormChange = (e) => {
       const { name, type, value } = e.target;
       const { fields } = this.state;
 
@@ -300,7 +298,7 @@ export default (schemas, methods) => FormComponent => (
         this.props.values[name] = theValue;
       }
       // Assemble and delay validate
-      await this.handleAssembleFieldChange(name, theValue);
+      this[ASSEMBLE_FIELD_CHANGE](name, theValue);
       // Update
       this.setState({
         fields,
@@ -317,7 +315,7 @@ export default (schemas, methods) => FormComponent => (
       // Initializes
       this.init(values);
       await Promise.all(
-        Object.keys(values).map(name => this.handleAssembleFieldChange(name, values[name])),
+        Object.keys(values).map(name => this[ASYNC_ASSEMBLE_FIELD_CHANGE](name, values[name])),
       );
       // Update
       this.setState({
@@ -411,12 +409,12 @@ export default (schemas, methods) => FormComponent => (
       const values = {};
       if (names.length) {
         names.forEach((name) => {
-          values[name] = this.originalValues[name];
+          values[name] = this[ORIGINAL_VALUES][name];
         });
         this.init(values);
       } else {
         // Init all
-        Object.assign(values, this.originalValues);
+        Object.assign(values, this[ORIGINAL_VALUES]);
         this.init(values);
       }
       // Update

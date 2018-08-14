@@ -28,7 +28,7 @@ export default (FormComponent, fieldType) => class Field extends React.Component
       formControl: {
         fields,
         init,
-        handleCreateDelayValidateFunc,
+        createDelayValidateFunc,
         onFormChange,
       },
     } = this.context;
@@ -43,7 +43,7 @@ export default (FormComponent, fieldType) => class Field extends React.Component
 
     // Async
     if (delay && !fields[name].delayFunc) {
-      fields[name].delayFunc = handleCreateDelayValidateFunc(delay);
+      fields[name].delayFunc = createDelayValidateFunc(delay);
     }
 
     return (
