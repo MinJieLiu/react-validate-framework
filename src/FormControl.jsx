@@ -9,6 +9,7 @@ import debounce from 'lodash.debounce';
 import isNumber from 'lodash.isnumber';
 
 const ORIGINAL_VALUES = Symbol('#ORIGINAL_VALUES');
+const ORIGINAL_CLASS_NAMES = Symbol('#ORIGINAL_CLASS_NAMES');
 
 const GET_RESULT_FROM_SCHEMA = Symbol('#GET_RESULT_FROM_SCHEMA');
 const ASSEMBLE_FIELD_FROM_RESULT = Symbol('#ASSEMBLE_FIELD_FROM_RESULT');
@@ -40,19 +41,17 @@ export default (schemas, methods) => FormComponent => (
       formControl: PropTypes.object.isRequired,
     };
 
-    static defaultProps = {
-      classNames: {},
-    };
-
     schemas = { ...schemas };
 
     [ORIGINAL_VALUES] = {};
 
+    [ORIGINAL_CLASS_NAMES] = {};
+
     constructor(props) {
       super(props);
       const {
-        classNames,
         values,
+        classNames,
       } = props;
 
       this.state = {
@@ -61,7 +60,10 @@ export default (schemas, methods) => FormComponent => (
 
       // Init
       if (values) {
-        this.init(values, classNames);
+        this.init(values);
+      }
+      if (classNames) {
+        this.initClassNames(classNames);
       }
 
       // Initializes the validation component and customizes the validation method
@@ -82,7 +84,6 @@ export default (schemas, methods) => FormComponent => (
         return;
       }
       // Updates the state from the parent component
-      const { classNames } = this.props;
       const { fields } = this.state;
 
       (async () => {
@@ -100,7 +101,7 @@ export default (schemas, methods) => FormComponent => (
           } else {
             // Add a new field
             fields[name] = {
-              className: classNames.static,
+              className: this[ORIGINAL_CLASS_NAMES].static,
               value,
             };
           }
@@ -162,7 +163,7 @@ export default (schemas, methods) => FormComponent => (
         const value = isNumber(theValue) ? String(theValue) : theValue;
         fields[name] = {
           ...fields[name],
-          className: this.props.classNames.static,
+          className: this[ORIGINAL_CLASS_NAMES].static,
           value,
         };
         // Only initialized once
@@ -183,7 +184,7 @@ export default (schemas, methods) => FormComponent => (
      */
     initClassNames = (classes) => {
       // Merge
-      Object.assign(this.props.classNames, classes);
+      Object.assign(this[ORIGINAL_CLASS_NAMES], classes);
       return this;
     };
 
@@ -223,7 +224,7 @@ export default (schemas, methods) => FormComponent => (
     };
 
     [ASSEMBLE_FIELD_FROM_RESULT] = (name, { result, error }) => {
-      const { classNames } = this.props;
+      const classNames = this[ORIGINAL_CLASS_NAMES];
       const { fields } = this.state;
 
       const classNameArray = [
