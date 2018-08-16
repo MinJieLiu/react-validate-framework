@@ -161,6 +161,7 @@ export default (schemas, methods) => FormComponent => (
         // Convert to string
         const value = isNumber(theValue) ? String(theValue) : theValue;
         fields[name] = {
+          ...fields[name],
           className: this.props.classNames.static,
           value,
         };
@@ -310,13 +311,13 @@ export default (schemas, methods) => FormComponent => (
      * Customize to change the values
      * @param values
      */
-    changeValues = async (values) => {
+    changeValues = (values) => {
       const { fields } = this.state;
       // Initializes
       this.init(values);
-      await Promise.all(
-        Object.keys(values).map(name => this[ASYNC_ASSEMBLE_FIELD_CHANGE](name, values[name])),
-      );
+      Object.keys(values).forEach((name) => {
+        this[ASSEMBLE_FIELD_CHANGE](name, values[name]);
+      });
       // Update
       this.setState({
         fields,
