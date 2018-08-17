@@ -35,8 +35,8 @@ Rules and messages like this:
 ```js
 const schemas = {
   email: {
-    rules: 'required | isEmail | maxLength(32)',
-    messages: 'Can not be empty! | Please enter a valid email address. | Can not exceed {{param}} characters.',
+    rules: 'required | isEmail | maxLength(32) | validateFromServer',
+    messages: 'Can not be empty! | Please enter a valid email address. | Can not exceed {{param}} characters. | | The email already exists.',
   },
   hobby: {
     rules: 'requiredField(phone) | selectLimit(2)',
@@ -64,41 +64,48 @@ const methods = {
 The BasicForm like this:
 
 ```js
-const BasicForm = () => (
-  <div className="form-group">
-    <Text
-      name="email"
-      placeholder="Please input your email"
-      delay={100} // Asynchronous validation
-    />
-    <Message className="valid-error-message" name="email" />
-    <Text name="phone" />
-  </div>
-);
+@formConnect(schemas, methods)
+export default class BasicForm extends React.Component {
+  
+  static propTypes = {
+    formControl: PropTypes.object,
+  };
+
+  constructor(props) {
+    super(props);
+    props.formControl.init({
+      email: '',
+      phone: '',
+    }, {
+      static: 'form-control',
+      success: 'valid-success',
+      error: 'valid-error',
+    });
+  }
+
+  handleSubmit = async () => {
+    const { formControl } = this.props;
+    if (await formControl.validate()) {
+      // Submit.
+    }
+  };
+
+  render() {
+    return (
+      <div className="form-group">
+        <Text
+          name="email"
+          placeholder="Please input your email"
+          delay={100} // Asynchronous validation
+        />
+        <Message className="valid-error-message" name="email" />
+        <Text name="phone" />
+        <button onClick={this.handleSubmit}>提交</button>
+      </div>
+    );
+  }
+}
 ```
-
-Export the module:
-
-```js
-export default formConnect(schemas, methods)(BasicForm);
-```
-
-Finally, sets the initialized value:
-
-```js
-<BasicForm
-  classNames={{
-    static: 'form-control',
-    success: 'valid-success',
-    error: 'valid-error',
-  }}
-  values={this.state.formValues}
-/>
-
-```
-
- * The values like this { email: '', hobby: ['2'] }
- * classNames and values can be initialized in `BasicForm` use `init`
 
 Validate methods can refer to [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
@@ -137,13 +144,6 @@ return (
 
 ### API
 
-#### FormControl params
-
-| name | type | required | default | description |
-| :--- | :--- | :--- | :--- | :--- |
-| values | Object | false | | Key-value pairs for `name` and` value` |
-| classNames | Object | false | {} | Its `key` value contains` static`, `success`,` error` |
-
 #### Form params
 
 | name | type | return | setState | description |
@@ -163,8 +163,6 @@ return (
 | addSchemas | function | this | false | Add one or more validation rules |
 | removeSchemas | function | this | true | Remove one or more validation rules, If there is no name, it will all be removed |
 | formDidChange | function | | | Callback |
-
-You can either pass in `values` as an argument, or call the `init` method when the form is initialized.
 
 You can invoke the `changeValues` method to simulate a form change event.
 

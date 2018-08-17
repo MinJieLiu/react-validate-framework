@@ -58,12 +58,11 @@ export default (schemas, methods) => FormComponent => (
         fields: {},
       };
 
-      // Init
-      if (values) {
-        this.init(values);
-      }
       if (classNames) {
         this.initClassNames(classNames);
+      }
+      if (values) {
+        this.init(values);
       }
 
       // Initializes the validation component and customizes the validation method

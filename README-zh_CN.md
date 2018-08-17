@@ -42,8 +42,8 @@ import formConnect, {
 ```js
 const schemas = {
   email: {
-    rules: 'required | isEmail | maxLength(32)',
-    messages: '不能为空 | 请输入有效的电子邮件地址 | 不能超过{{param}}个字符',
+    rules: 'required | isEmail | maxLength(32) | validateFromServer',
+    messages: '不能为空 | 请输入有效的电子邮件地址 | 不能超过{{param}}个字符 | 邮箱被占用',
   },
   hobby: {
     rules: 'requiredField(email) | selectLimit(2)',
@@ -70,44 +70,50 @@ const methods = {
 
  * 验证规则和扩展方法不是必需
 
-表单像这样：
+表单：
 
 ```js
-const BasicForm = () => (
-  <div className="form-group">
-    <Text
-      name="email"
-      placeholder="Please input your email"
-    />
-    <Message className="valid-error-message" name="email" />
-  </div>
-);
+@formConnect(schemas, methods)
+export default class BasicForm extends React.Component {
+  static propTypes = {
+    formControl: PropTypes.object,
+  };
+
+  constructor(props) {
+    super(props);
+    props.formControl.init({
+      email: '',
+      phone: '',
+    }, {
+      static: 'form-control',
+      success: 'valid-success',
+      error: 'valid-error',
+    });
+  }
+
+  handleSubmit = async () => {
+    const { formControl } = this.props;
+    if (await formControl.validate()) {
+      // Submit.
+    }
+  };
+
+  render() {
+    return (
+      <div className="form-group">
+        <Text
+          name="email"
+          placeholder="Please input your email"
+          delay={100} // Asynchronous validation
+        />
+        <Message className="valid-error-message" name="email" />
+        <Text name="phone" />
+        <button onClick={this.handleSubmit}>提交</button>
+      </div>
+    );
+  }
+}
 ```
-
- * 组件中 `name` 为必需值
-
-导出模块：
-
-```js
-export default formConnect(schemas, methods)(BasicForm);
-```
-
-最后，初始化表单值和类名：
-
-```js
-<BasicForm
-  classNames={{
-    static: 'form-control',
-    success: 'valid-success',
-    error: 'valid-error',
-  }}
-  values={this.state.formValues}
-/>
-```
-
-
- * `values` 的值类似于 { email: '', hobby: ['2'] }
- * `classNames` 和 `values` 也可以在 `BasicForm` 中使用 `init` 方法初始化
 
 基础验证方法可以参考 [validate-framework-utils](https://github.com/MinJieLiu/validate-framework-utils)
 
@@ -120,7 +126,7 @@ export default formConnect(schemas, methods)(BasicForm);
  * `Textarea`
  * `Message`
 
-表单域 `name` 属性是必需的，`delay` 为验证防抖，其他参数可以被覆盖。
+表单域 `name` 属性是必需的，`delay` 为验证防抖（有异步验证时为必需），其他参数可以被覆盖。
 
 当然，你也可以使用自定义的表单受控组件，只需指定 `value` 和 `onChange`：
 
@@ -145,13 +151,6 @@ return (
 ```
 
 ### API
-
-#### `FormControl` 参数
-
-| 名称 | 类型 | 必需 | 默认值 | 描述 |
-| :--- | :--- | :--- | :--- | :--- |
-| values | Object | false | | `values` 集合 |
-| classNames | Object | false | {} | 其 key 值包含 `static`，`success`，`error` 三种类名 |
 
 #### Form params
 
